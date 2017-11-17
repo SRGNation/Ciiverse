@@ -1,0 +1,10 @@
+RewriteEngine on
+
+RewriteRule ^users/([A-Za-z0-9_-]+)$ profile.php?ciiverseid=$1
+RewriteRule ^communities/([0-9]+)$ communities.php?cid=$1
+RewriteRule ^changelog$ communities.php?cid=55
+RewriteRule ^post/([0-9]+)$ posts.php?pid=$1
+RewriteRule ^notifications$ notifications.php
+RewriteRule ^delete_post/([0-9]+)$ delete_post.php?pid=$1
+RewriteRule ^edit/profile$ users/edit_profile.php
+RewriteRule ^users/([A-Za-z0-9_-]+)/empathies$ user_yeahs.php?ciiverseid=$1
