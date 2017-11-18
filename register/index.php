@@ -1,7 +1,7 @@
 <?php 
 
-require('../login/IncludesOrSomething/db_login.php');
-require('../login/IncludesOrSomething/filter.php');
+require('../lib/connect.php');
+
 session_start();
 
 if($_SERVER['REQUEST_METHOD'] == 'POST') {
