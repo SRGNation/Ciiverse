@@ -1,0 +1,19 @@
+php_value display_errors 1
+
+RewriteEngine on
+
+RewriteRule ^users/([A-Za-z0-9_-]+)$ profile.php?ciiverseid=$1&page=1 [QSA,L]
+RewriteRule ^communities/([0-9]+)$ communities.php?cid=$1
+RewriteRule ^changelog$ communities.php?cid=55
+RewriteRule ^post/([0-9]+)$ posts.php?pid=$1
+RewriteRule ^notifications$ notifications.php
+RewriteRule ^delete_post/([0-9]+)$ delete_post.php?pid=$1
+RewriteRule ^edit/profile$ users/edit_profile.php
+RewriteRule ^users/([A-Za-z0-9_-]+)/empathies$ profile.php?ciiverseid=$1&page=2 [QSA,L]
+RewriteRule ^users/([A-Za-z0-9_-]+)/replies$ profile.php?ciiverseid=$1&page=3 [QSA,L]
+RewriteRule ^add_yeah/([0-9]+)/post yeah.php?post_id=$1&type=post&remove=0
+RewriteRule ^add_yeah/([0-9]+)/reply yeah.php?post_id=$1&type=reply&remove=0
+RewriteRule ^delete_yeah/([0-9]+)/post yeah.php?post_id=$1&type=post&remove=1
+RewriteRule ^delete_yeah/([0-9]+)/reply yeah.php?post_id=$1&type=reply&remove=1
+
+php_value date.timezone "America/New_York"
