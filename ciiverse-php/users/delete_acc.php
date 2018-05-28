@@ -4,17 +4,22 @@ session_start();
 $redirect = 0;
 include("../lib/connect.php");
 
-$ciiverseid = mysqli_real_escape_string($db,$_GET['cvid']);
+$ciiverseid = mysqli_real_escape_string($db,$_POST['cvid']);
+$csrftok = $_POST['csrf_token'];
 
-if($user['user_type'] < 2) {
-	die("You are not authorized to perform this action. Sorry :(");
+if($_POST['csrf_token'] !== $_COOKIE['csrf_token']) {
+	exit();
+}
+
+if($user['user_level'] < 1) {
+	die("You are not authorized to perform this action.");
 }
 
 $sql = "SELECT * FROM users WHERE ciiverseid = '$ciiverseid' ";
 $res = mysqli_query($db,$sql);
 $row = mysqli_fetch_array($res);
 
-if($row['user_type'] >= $user['user_type']) {
+if($row['user_level'] >= $user['user_level']) {
 die("An error occured.");
 }
 
@@ -26,10 +31,14 @@ die("The Ciiverse ID you're trying to delete doesn't exist");
 $sql1 = "DELETE FROM users WHERE ciiverseid = '$ciiverseid' ";
 $sql2 = "DELETE FROM posts WHERE owner = '$ciiverseid'";
 $sql3 = "DELETE FROM comments WHERE owner = '$ciiverseid' ";
+$sql4 = "DELETE FROM yeahs WHERE owner = '$ciiverseid' ";
+$sql5 = "DELETE FROM notifs WHERE notif_to = '$ciiverseid' AND notif_by = '$ciiverseid' ";
 
 mysqli_query($db,$sql1);
 mysqli_query($db,$sql2);
 mysqli_query($db,$sql3);
+mysqli_query($db,$sql4);
+mysqli_query($db,$sql5);
 
 echo "Deleted the user $ciiverseid";
 

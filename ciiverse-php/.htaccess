@@ -11,9 +11,11 @@ RewriteRule ^delete_post/([0-9]+)$ delete_post.php?pid=$1
 RewriteRule ^edit/profile$ users/edit_profile.php
 RewriteRule ^users/([A-Za-z0-9_-]+)/empathies$ profile.php?ciiverseid=$1&page=2 [QSA,L]
 RewriteRule ^users/([A-Za-z0-9_-]+)/replies$ profile.php?ciiverseid=$1&page=3 [QSA,L]
-RewriteRule ^add_yeah/([0-9]+)/post yeah.php?post_id=$1&type=post&remove=0
-RewriteRule ^add_yeah/([0-9]+)/reply yeah.php?post_id=$1&type=reply&remove=0
-RewriteRule ^delete_yeah/([0-9]+)/post yeah.php?post_id=$1&type=post&remove=1
-RewriteRule ^delete_yeah/([0-9]+)/reply yeah.php?post_id=$1&type=reply&remove=1
+RewriteRule ^users/([A-Za-z0-9_-]+)/deleted$ profile.php?ciiverseid=$1&page=4 [QSA,L]
+RewriteRule ^users/([A-Za-z0-9_-]+)/followers$ profile.php?ciiverseid=$1&page=5 [QSA,L]
+RewriteRule ^users/([A-Za-z0-9_-]+)/following$ profile.php?ciiverseid=$1&page=6 [QSA,L]
+RewriteRule ^communities/favorites$ favorites.php
+RewriteRule ^feed$ activity_feed.php
+RewriteRule ^rules$ rules.php
 
 php_value date.timezone "America/New_York"

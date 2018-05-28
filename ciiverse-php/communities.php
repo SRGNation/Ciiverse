@@ -8,7 +8,7 @@ include('lib/users.php');
 
 $cid = mysqli_real_escape_string($db,$_GET['cid']);
 
-$sql = "SELECT community_picture, community_name, comm_desc, community_banner, rd_oly, deleted FROM communities WHERE id='$cid' ";
+$sql = "SELECT community_picture, community_name, comm_desc, community_banner, rd_oly, deleted, type FROM communities WHERE id='$cid' ";
 $result = mysqli_query($db,$sql);
 $row = mysqli_fetch_array($result);
 
@@ -21,6 +21,7 @@ $name = $row['community_name'];
 $description = $row['comm_desc'];
 $banner = $row['community_banner'];
 $rd_oly = $row['rd_oly'];
+$type = $row['type'];
 
 } else {
   exit("Community does not exist");
@@ -30,10 +31,36 @@ if($row['deleted'] == 1) {
   exit("This community has been deleted and is no longer available.");
 }
 
-$ansql = "SELECT posts.content, posts.owner, posts.date_time, posts.yeahs, posts.feeling, posts.screenshot, posts.post_id, users.nickname, users.user_type, posts.comments FROM posts, users WHERE posts.community_id = '$cid' AND users.ciiverseid = posts.owner ORDER BY post_id DESC limit 100";
+if(!isset($_GET['offset'])) {
+  $limit = 50;
+} else {
+  $limit = (mysqli_real_escape_string($db,$_GET['offset']) * 50);
+}
+
+$ansql = "SELECT post_id FROM posts WHERE community_id = $cid AND deleted = 0 ORDER BY post_id DESC limit $limit";
 $aresult = mysqli_query($db,$ansql);
 
 $counting = mysqli_num_rows($aresult);
+
+#This code below will check if the user has favorited this community
+if(isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
+$community = $db->query("SELECT * FROM favorite_communities WHERE community_id = '$cid' AND owner = '".$_SESSION['ciiverseid']."' ");
+$favorite = mysqli_num_rows($community);
+}
+
+
+/*
+
+Community Types:
+0. General Community
+1. Announcement Community
+2. Game Community 3DS
+3. Game Community Wii U
+4. Game Community 3DS/Wii U
+
+*/
+
+
 ?>
 
 <html>
@@ -68,9 +95,17 @@ $counting = mysqli_num_rows($aresult);
             <img src="<?php echo $picture; ?>" class="icon">
           </a>
         </span>
-        <span class="platform-tag">
-            <img src="">
-        </span>
+        <?php 
+
+          if($type == 2) {
+            echo '<span class="platform-tag"><img src="/img/platform-tag-3ds.png"></span>';
+          }elseif($type == 3) {
+            echo '<span class="platform-tag"><img src="/img/platform-tag-wiiu.png"></span>';
+          }elseif($type == 4) {
+            echo '<span class="platform-tag"><img src="/img/platform-tag-wiiu-3ds.png"></span>';
+          }
+
+        ?>
       </span>
       <h1 class="community-name">
         <a href="/communities/<?php echo $cid; ?>"><?php echo $name; ?> Community</a>      </h1>
@@ -78,7 +113,11 @@ $counting = mysqli_num_rows($aresult);
       <div class="community-description js-community-description">
         <p class="text js-truncated-text"><?php echo $description; ?></p>
       </div>
-      
+    <?php
+    if(isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
+    echo  '<a class="symbol button favorite-button '.($favorite > 0 ? 'checked' : '').'" href="/favorite_community.php?cid='.$cid.'&action='.($favorite == 0 ? 'favorite' : 'unfavorite').'"><span class="favorite-button-text">Favorite</span></a>';
+   }
+     ?>
     <div class="sidebar-setting">
       <div class="sidebar-post-menu">
       </div>
@@ -90,13 +129,13 @@ $counting = mysqli_num_rows($aresult);
         <?php 
         if(isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
           if($rd_oly == 'false') {
-                if($_SESSION['ciiverseid'] !== '124598Dom' && $user['user_type'] < 3 && $cid == 56) {
+                if($_SESSION['ciiverseid'] !== '124598Dom' && $cid == 56) {
                 echo 'This is a Dominic only community.';
                 } else {
                 form_post_thingy();
               }
   } else {
-    if($user['user_type'] > 2) { form_post_thingy(); } else {
+    if($user['user_level'] > 5) { form_post_thingy(); } else {
     echo 'This is a read only community.';
     }
   }
@@ -106,28 +145,8 @@ $counting = mysqli_num_rows($aresult);
           <div class="list post-list js-post-list">
 				<?php 
         if($counting == 0) { echo "There are no posts on this community yet."; } else {
-        while($row = mysqli_fetch_array($aresult)) { 
-echo '<div id="post" data-href="/post/'.$row['post_id'].'" class="post post-subtype-default trigger" tabindex="0">
-  <a href="/users/' . $row['owner'] .  '" class="icon-container '; if($row['user_type'] > 2) { echo 'official-user'; }  echo '"><img src="'.htmlspecialchars(user_pfp($row['owner'],$row['feeling'])).'" class="icon"></a>
-  <p class="user-name"><a href="/users/' . htmlspecialchars($row['owner']) . '">' . htmlspecialchars($row['nickname']) . '</a></p>
-  <div class="timestamp-container"><span class="timestamp">'.humanTiming(strtotime($row['date_time'])).'</span></div>
-    </p>
-
-  <div class="body">
-    <div class="post-content">
-        <div class="tag-container">
-        </div>
-            '.(empty($row['screenshot']) ? '' : '<a class="screenshot-container still-image" href="/post/'.$row['post_id'].'"><img src="'.$row['screenshot'].'"></a>').'
-            <p class="post-content-text">' . htmlspecialchars($row['content']) . '</p>
-    		</div>
-      <div class="post-meta">
-      <div class="empathy symbol"><span class="symbol-label">Yeahs</span><span class="empathy-count">'.$row['yeahs'].'</span></div>
-      <div class="reply symbol"><span class="symbol-label">Comments</span><span class="reply-count">'.$row['comments'].'</span></div>
-  </div>
-  		</div>
-
- 	</div>
-  ';
+        while($row = mysqli_fetch_array($aresult)) {
+          printPost($row['post_id'],0);
 }
  }
   ?>
@@ -135,11 +154,20 @@ echo '<div id="post" data-href="/post/'.$row['post_id'].'" class="post post-subt
     $(".post-button").click(function(e){
       $(this).addClass('disabled');
     });
+
   </script>
+    <div>
+      <center>
+    <button id="LMPIC" class="black-button apply-button" commute_id="<?php echo $cid; ?>">Load More posts</button>
+      </center>
+  </div>
 </div>
 </div>
 </div>
 </div>
+  <?php 
+  printFooter();
+  ?>
 </div>
 </div>
 

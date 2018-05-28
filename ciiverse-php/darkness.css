@@ -1,4 +1,4 @@
-﻿@charset 'UTF-8';
+@charset 'UTF-8';
 @font-face {
   font-family: 'MiiverseSymbols';
   src: url('MiiverseSymbols-Regular.eot?g4khEYcfqJ5alM6eFiV-LA');
@@ -13,7 +13,7 @@ body {
   line-height: 1.5;
   margin: 0;
   padding: 0;
-  color: #323232;
+  color: #ffffff;
   background: #eee url('checker.png');
 }
 h1,
@@ -56,7 +56,7 @@ a {
 }
 img {
   border: 0;
-  color: #ddd;
+  color: #000;
 }
 input,
 label,
@@ -108,13 +108,13 @@ body {
   -o-text-size-adjust: 100%;
   text-size-adjust: 100%;
   word-wrap: break-word;
-  background: #e2e2e2;
+  background: #0c0c0c;
 }
 .trigger:hover {
-  background-color: #f9f9f9;
+  background-color: #434343;
 }
 .trigger:active {
-  background-color: #ddd;
+  background-color: #050505;
 }
 .trigger a:link:hover,
 .trigger a:visited:hover,
@@ -125,14 +125,14 @@ html body {
   font-family: 'Helvetica', 'Arial', sans-serif;
 }
 html.os-win body {
-  font-family: 'Helvetica', 'Arial', 'Meiryo', 'メイリオ', sans-serif;
+  font-family: 'Helvetica', 'Arial', 'Meiryo', 'ÃƒÂ£Ã†â€™Ã‚Â¡ÃƒÂ£Ã¢â‚¬Å¡Ã‚Â¤ÃƒÂ£Ã†â€™Ã‚ÂªÃƒÂ£Ã¢â‚¬Å¡Ã‚Âª', sans-serif;
 }
 html.os-mac body {
-  font-family: 'Helvetica', 'Arial', 'ヒラギノ角ゴ Pro W3', 'Hiragino Kaku Gothic Pro', sans-serif;
+  font-family: 'Helvetica', 'Arial', 'ÃƒÂ£Ã†â€™Ã¢â‚¬â„¢ÃƒÂ£Ã†â€™Ã‚Â©ÃƒÂ£Ã¢â‚¬Å¡Ã‚Â®ÃƒÂ£Ã†â€™Ã…Â½ÃƒÂ¨Ã‚Â§Ã¢â‚¬â„¢ÃƒÂ£Ã¢â‚¬Å¡Ã‚Â´ Pro W3', 'Hiragino Kaku Gothic Pro', sans-serif;
 }
 html.os-win form input,
 html.os-win button {
-  font-family: 'Helvetica', 'Arial', 'Meiryo', 'メイリオ', sans-serif;
+  font-family: 'Helvetica', 'Arial', 'Meiryo', 'ÃƒÂ£Ã†â€™Ã‚Â¡ÃƒÂ£Ã¢â‚¬Å¡Ã‚Â¤ÃƒÂ£Ã†â€™Ã‚ÂªÃƒÂ£Ã¢â‚¬Å¡Ã‚Âª', sans-serif;
 }
 .symbol:before {
   font-family: 'MiiverseSymbols', sans-serif !important;
@@ -156,8 +156,7 @@ body {
   min-width: 320px;
   margin: auto 0;
   text-align: left;
-  background-color: #f4f4f4;
-  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAArUlEQVQoFYWQuwrCQBBFd42FlaYQRMRCO3vBNpA/8HNtBbt04gcItnaKoLKegRnYTRYzcLjzuLNh4kMILooh+SeqO6kYJOawhzE0cIBsDLRboRPwsIUFZMMWTM1UWNJWMx4ZPHV4Rq9to9U+OlpeHcHDhjmNF3LzHc01yBdPEOwvkXdiQ6fW7gp9QWM3aD+RWVI5N5X638KF+VuXvqjUru+GEs8SbnCH3gXxJPEDtBsiPW8IwCQAAAAASUVORK5CYII=');
+  background-color: #1e1e1e;
   background-attachment: fixed;
 }
 #sub-body {
@@ -166,8 +165,8 @@ body {
   height: 54px;
   position: fixed;
   z-index: 20;
-  background: #fff;
-  border-bottom: 2px solid #e5e5e5;
+  background: #1e1e1e;
+  border-bottom: 2px solid #585858;
 }
 #global-menu {
   max-width: 950px;
@@ -203,7 +202,7 @@ body {
 }
 .post-list-outline {
   margin: 0 0 15px 0;
-  background: #fff;
+  background: #262626;
   border: 1px solid rgba(0, 0, 0, 0.1);
   overflow: hidden;
   -webkit-box-shadow: 0 1px 0px rgba(0, 0, 0, 0.2);
@@ -228,7 +227,7 @@ body {
   margin-bottom: 30px;
 }
 #footer {
-  background: #e2e2e2;
+  background: #0e0e0e;
   position: absolute;
   bottom: 0;
   left: 0;
@@ -285,7 +284,7 @@ body {
   float: none;
   text-align: center;
   display: block;
-  background-color: #f6f6f6;
+  background-color: #212121;
   padding: 8px 0 5px;
   margin-top: 10px;
 }
@@ -701,7 +700,7 @@ body:not(.is-autopagerized) .adx-link-container {
 #global-menu li button {
   position: relative;
   line-height: 1;
-  color: #646464;
+  color: #ffffff;
   background-repeat: no-repeat;
   padding: 0 5px;
   display: table;
@@ -739,7 +738,7 @@ body:not(.is-autopagerized) .adx-link-container {
   height: 38px;
 }
 #global-menu li#global-menu-mymenu .icon-container img {
-  border: 1px solid #ddd;
+  border: 1px solid #ffffff;
   width: 36px;
   height: 36px;
   -webkit-border-radius: 5px;
@@ -820,8 +819,8 @@ body:not(.is-autopagerized) .adx-link-container {
   border-radius: 20px;
 }
 #global-menu #global-my-menu {
-  background-color: #fff;
-  border: 2px solid #ddd;
+  background-color: #000;
+  border: 2px solid #161616;
   text-align: left;
   top: 60px;
   padding: 10px 5px;
@@ -851,13 +850,13 @@ body:not(.is-autopagerized) .adx-link-container {
 }
 #global-menu #global-my-menu:after {
   border-color: transparent;
-  border-bottom-color: #ffffff;
+  border-bottom-color: #000000;
   border-width: 10px;
   margin-right: -10px;
 }
 #global-menu #global-my-menu:before {
   border-color: transparent;
-  border-bottom-color: #dddddd;
+  border-bottom-color: #0c0c0c;
   border-width: 13px;
   margin-right: -13px;
 }
@@ -903,7 +902,7 @@ body:not(.is-autopagerized) .adx-link-container {
   appearance: none;
   border: none;
   background: transparent;
-  color: #646464;
+  color: #1e1e1e;
   display: block;
   text-align: left;
   text-indent: 30px;
@@ -996,9 +995,9 @@ h3.label.label-3ds .with-filter-right {
 }
 h2.reply-label {
   clear: both;
-  background: #17a6ff;
+  background: #5ac800;
   color: #FFF;
-  border-top: 1px solid #5dc8ff;
+  border-top: 1px solid #4faf00;
   padding: 3px 10px 1px;
 }
 .count {
@@ -1237,7 +1236,7 @@ h2.label-topic .with-filter-right {
 }
 .tab2 a.selected span.number,
 .tab3 a.selected span.number {
-  background: #ffffff;
+  background: #3caa00;
 }
 .tab2 a.selected:hover,
 .tab3 a.selected:hover {
@@ -1283,7 +1282,7 @@ h2.label-topic .with-filter-right {
   float: left;
 }
 .icon-container .icon {
-  background: #fff;
+  background: #262626;
   border: 1px solid #ddd;
   vertical-align: middle;
   width: 56px;
@@ -1398,9 +1397,6 @@ h2.label-topic .with-filter-right {
   float: right;
   margin: 0 0 10px 10px;
   padding: 4px 0 3px;
-}
-.button.rm-post-button:before {
-    content: "d"!important
 }
 .button.edit-button:hover {
   text-decoration: none;
@@ -2056,7 +2052,7 @@ h2.label-topic .with-filter-right {
   display: block;
   font-size: 16px;
   font-weight: bold;
-  color: #323232;
+  color: #f4f4f4;
   margin-bottom: 2px;
   margin-top: 3px;
   line-height: 1.2;
@@ -2122,7 +2118,7 @@ h2.label-topic .with-filter-right {
   clear: both;
 }
 .community-card-list > li {
-  background: #fff;
+  background: #1a1a1a;
   border: 1px solid rgba(0, 0, 0, 0.1);
   overflow: hidden;
   -webkit-box-shadow: 0 1px 0px rgba(0, 0, 0, 0.2);
@@ -2236,10 +2232,10 @@ h2.label-topic .with-filter-right {
 .list-content-with-icon-and-text .nick-name {
   font-size: 16px;
   font-weight: bold;
-  color: #323232;
+  color: #ffffff;
 }
 .list-content-with-icon-and-text .nick-name a {
-  color: #323232;
+  color: #ffffff;
 }
 .list-content-with-icon-and-text .id-name {
   font-size: 12px;
@@ -2481,7 +2477,7 @@ form.search input[type="submit"] {
   position: relative;
 }
 .feeling-selector .feeling-button.checked {
-  color: #00a8ff;
+  color: #98ff42;
 }
 .feeling-selector input {
   -webkit-appearance: none;
@@ -3083,7 +3079,7 @@ input.file-button {
   margin-right: 5px;
 }
 .card {
-  background: #fff;
+  background: #262626;
   border: 1px solid rgba(0, 0, 0, 0.1);
   overflow: hidden;
   -webkit-box-shadow: 0 1px 0px rgba(0, 0, 0, 0.2);
@@ -3099,7 +3095,7 @@ input.file-button {
 }
 .sidebar-container {
   margin: 0 0 15px 0;
-  background: #fff;
+  background: #262626;
   border: 1px solid rgba(0, 0, 0, 0.1);
   overflow: hidden;
   -webkit-box-shadow: 0 1px 0px rgba(0, 0, 0, 0.2);
@@ -3376,7 +3372,7 @@ input.file-button {
   line-height: 1.2em;
 }
 #sidebar-profile-body .nick-name {
-  color: #323232;
+  color: #ffffff;
   font-size: 18px;
   font-weight: bold;
   display: block;
@@ -3391,7 +3387,7 @@ input.file-button {
   margin-top: 2px;
 }
 #sidebar-profile-body .id-name {
-  color: #969696;
+  color: #bababa;
   font-size: 14px;
   margin-left: 85px;
   font-weight: normal;
@@ -3484,7 +3480,7 @@ input.file-button {
   border-radius: 0 5px 5px 0;
 }
 .user-sidebar .follow-button:before {
-  color: #0a9edb;
+  color: #5ac800;
   font-size: 13px;
   content: "Q";
 }
@@ -3745,7 +3741,7 @@ input.file-button {
 }
 .community-description {
   color: #646464;
-  background-color: #f6f6f6;
+  background-color: #1a1a1a;
   margin: 0 15px 15px;
   padding: 15px;
   line-height: 1.5;
@@ -4123,7 +4119,7 @@ p.note-jasrac span {
   margin: 10px 30px 10px;
 }
 .download-request-setting-form ul li:before {
-  content: '●';
+  content: 'ÃƒÂ¢Ã¢â‚¬â€Ã‚Â';
   margin: 0 0.2em 0 -0.9em;
 }
 .download-request-setting-form .settings-label {
@@ -4454,7 +4450,7 @@ div#activity-feed-tutorial.no-content p.tleft {
 }
 #community-favorite {
   padding: 10px 0px 10px 10px;
-  background: #fff;
+  background: #0c0c0c;
   border: 1px solid rgba(0, 0, 0, 0.1);
   overflow: hidden;
   -webkit-box-shadow: 0 1px 0px rgba(0, 0, 0, 0.2);
@@ -4469,7 +4465,7 @@ div#activity-feed-tutorial.no-content p.tleft {
   border-radius: 5px;
 }
 #community-favorite:hover {
-  background: #fff;
+  background: #2e2e2e;
 }
 #community-favorite ul {
   position: relative;
@@ -4513,7 +4509,7 @@ div#activity-feed-tutorial.no-content p.tleft {
   height: 65%;
 }
 .favorite-community-link.symbol {
-  background: #f2f2f2;
+  background: #141414;
   display: inline-block;
   top: 50%;
   right: 15px;
@@ -4536,7 +4532,7 @@ div#activity-feed-tutorial.no-content p.tleft {
   margin-left: 6px;
 }
 .favorite-community-link.symbol:hover {
-  background: #e6e6e6;
+  background: #565656;
 }
 #identified-user-banner {
   background: #fff;
@@ -4580,7 +4576,7 @@ div#activity-feed-tutorial.no-content p.tleft {
   font-size: 16px;
   font-weight: bold;
   display: block;
-  color: #5ac800;
+  color: #0c81ec;
   padding: 12px 5px 4px 68px;
   line-height: 1.3em;
 }
@@ -4659,7 +4655,7 @@ div#activity-feed-tutorial.no-content p.tleft {
   font-weight: bold;
 }
 .filtering-label.filtering-label-topic-open .accepting:before {
-  content: "●";
+  content: "ÃƒÂ¢Ã¢â‚¬â€Ã‚Â";
   font-weight: normal;
   font-size: 5px;
   margin-right: 5px;
@@ -4721,8 +4717,8 @@ div#activity-feed-tutorial.no-content p.tleft {
   margin-top: 0;
 }
 .digest .post .community-container {
-  border: 1px solid #ddd;
-  border-top: 1px solid #eee;
+  border: 1px solid #262626;
+  border-top: 1px solid #000;
   border-bottom: none;
   bottom: 0;
   margin: 0;
@@ -4744,7 +4740,7 @@ div#activity-feed-tutorial.no-content p.tleft {
   padding: 0 8px;
 }
 .digest .post .icon-container {
-  background: #fff;
+  background: #0e0e0e;
   border: 1px solid rgba(0, 0, 0, 0.1);
   overflow: hidden;
   -webkit-box-shadow: 0 1px 0px rgba(0, 0, 0, 0.2);
@@ -4918,7 +4914,7 @@ div#activity-feed-tutorial.no-content p.tleft {
   line-height: 1.3em;
 }
 /*
-/////// お絵描きとトピックの人気の投稿ダイジェストはサイドバーに出ることになったので消す
+/////// ÃƒÂ£Ã‚ÂÃ…Â ÃƒÂ§Ã‚ÂµÃ‚ÂµÃƒÂ¦Ã‚ÂÃ‚ÂÃƒÂ£Ã‚ÂÃ‚ÂÃƒÂ£Ã‚ÂÃ‚Â¨ÃƒÂ£Ã†â€™Ã‹â€ ÃƒÂ£Ã†â€™Ã¢â‚¬ÂÃƒÂ£Ã†â€™Ã†â€™ÃƒÂ£Ã¢â‚¬Å¡Ã‚Â¯ÃƒÂ£Ã‚ÂÃ‚Â®ÃƒÂ¤Ã‚ÂºÃ‚ÂºÃƒÂ¦Ã‚Â°Ã¢â‚¬â€ÃƒÂ£Ã‚ÂÃ‚Â®ÃƒÂ¦Ã…Â Ã¢â‚¬Â¢ÃƒÂ§Ã‚Â¨Ã‚Â¿ÃƒÂ£Ã†â€™Ã¢â€šÂ¬ÃƒÂ£Ã¢â‚¬Å¡Ã‚Â¤ÃƒÂ£Ã¢â‚¬Å¡Ã‚Â¸ÃƒÂ£Ã¢â‚¬Å¡Ã‚Â§ÃƒÂ£Ã¢â‚¬Å¡Ã‚Â¹ÃƒÂ£Ã†â€™Ã‹â€ ÃƒÂ£Ã‚ÂÃ‚Â¯ÃƒÂ£Ã¢â‚¬Å¡Ã‚ÂµÃƒÂ£Ã¢â‚¬Å¡Ã‚Â¤ÃƒÂ£Ã†â€™Ã¢â‚¬Â°ÃƒÂ£Ã†â€™Ã‚ÂÃƒÂ£Ã†â€™Ã‚Â¼ÃƒÂ£Ã‚ÂÃ‚Â«ÃƒÂ¥Ã¢â‚¬Â¡Ã‚ÂºÃƒÂ£Ã¢â‚¬Å¡Ã¢â‚¬Â¹ÃƒÂ£Ã‚ÂÃ¢â‚¬Å“ÃƒÂ£Ã‚ÂÃ‚Â¨ÃƒÂ£Ã‚ÂÃ‚Â«ÃƒÂ£Ã‚ÂÃ‚ÂªÃƒÂ£Ã‚ÂÃ‚Â£ÃƒÂ£Ã‚ÂÃ…Â¸ÃƒÂ£Ã‚ÂÃ‚Â®ÃƒÂ£Ã‚ÂÃ‚Â§ÃƒÂ¦Ã‚Â¶Ã‹â€ ÃƒÂ£Ã‚ÂÃ¢â€žÂ¢
 #community-eyecatch-menu {
   margin: 0 0 18px;
   .clearfix;
@@ -4928,7 +4924,7 @@ div#activity-feed-tutorial.no-content p.tleft {
   }
   a {
     color: #7f7f7f;
-    &:before { // アイコンを表示する
+    &:before { // ÃƒÂ£Ã¢â‚¬Å¡Ã‚Â¢ÃƒÂ£Ã¢â‚¬Å¡Ã‚Â¤ÃƒÂ£Ã¢â‚¬Å¡Ã‚Â³ÃƒÂ£Ã†â€™Ã‚Â³ÃƒÂ£Ã¢â‚¬Å¡Ã¢â‚¬â„¢ÃƒÂ¨Ã‚Â¡Ã‚Â¨ÃƒÂ§Ã‚Â¤Ã‚ÂºÃƒÂ£Ã‚ÂÃ¢â€žÂ¢ÃƒÂ£Ã¢â‚¬Å¡Ã¢â‚¬Â¹
       background: #d2d2d2;
       font-size: 16px;
       width: 34px;
@@ -4945,7 +4941,7 @@ div#activity-feed-tutorial.no-content p.tleft {
     color: #04c9db;
     position: relative;
     font-weight: bold;
-    &:before { // 選択されているときはアイコンを大きくする
+    &:before { // ÃƒÂ©Ã‚ÂÃ‚Â¸ÃƒÂ¦Ã…Â Ã…Â¾ÃƒÂ£Ã‚ÂÃ¢â‚¬Â¢ÃƒÂ£Ã¢â‚¬Å¡Ã…â€™ÃƒÂ£Ã‚ÂÃ‚Â¦ÃƒÂ£Ã‚ÂÃ¢â‚¬Å¾ÃƒÂ£Ã¢â‚¬Å¡Ã¢â‚¬Â¹ÃƒÂ£Ã‚ÂÃ‚Â¨ÃƒÂ£Ã‚ÂÃ‚ÂÃƒÂ£Ã‚ÂÃ‚Â¯ÃƒÂ£Ã¢â‚¬Å¡Ã‚Â¢ÃƒÂ£Ã¢â‚¬Å¡Ã‚Â¤ÃƒÂ£Ã¢â‚¬Å¡Ã‚Â³ÃƒÂ£Ã†â€™Ã‚Â³ÃƒÂ£Ã¢â‚¬Å¡Ã¢â‚¬â„¢ÃƒÂ¥Ã‚Â¤Ã‚Â§ÃƒÂ£Ã‚ÂÃ‚ÂÃƒÂ£Ã‚ÂÃ‚ÂÃƒÂ£Ã‚ÂÃ¢â€žÂ¢ÃƒÂ£Ã¢â‚¬Å¡Ã¢â‚¬Â¹
       color: #fff;
       width: 48px;
       height: 48px;
@@ -4954,7 +4950,7 @@ div#activity-feed-tutorial.no-content p.tleft {
       margin: 0 6px 0 0;
       .border-radius(24px);
     }
-    &:after { // フキダシの尻尾
+    &:after { // ÃƒÂ£Ã†â€™Ã¢â‚¬Â¢ÃƒÂ£Ã¢â‚¬Å¡Ã‚Â­ÃƒÂ£Ã†â€™Ã¢â€šÂ¬ÃƒÂ£Ã¢â‚¬Å¡Ã‚Â·ÃƒÂ£Ã‚ÂÃ‚Â®ÃƒÂ¥Ã‚Â°Ã‚Â»ÃƒÂ¥Ã‚Â°Ã‚Â¾
       content: "";
       position: absolute;
       bottom: -20px;
@@ -5078,8 +5074,8 @@ div#activity-feed-tutorial.no-content p.tleft {
   margin-right: -15px;
 }
 .post .community-container {
-  background-color: #f9f9f9;
-  border-bottom: 1px solid #eee;
+  background-color: #262626;
+  border-bottom: 1px solid #000;
   margin: -15px -15px 15px;
   padding: 5px 8px;
   font-size: 12px;
@@ -5112,7 +5108,7 @@ div#activity-feed-tutorial.no-content p.tleft {
   font-size: 18px;
 }
 .post .community-container-heading a {
-  color: #323232;
+  color: #ffffff;
 }
 .post .post-content-memo img {
   vertical-align: bottom;
@@ -5161,7 +5157,7 @@ div#activity-feed-tutorial.no-content p.tleft {
   display: none !important;
 }
 .user-name a {
-  color: #323232;
+  color: #ffffff;
   font-weight: bold;
 }
 .user-name a:hover {
@@ -5533,7 +5529,7 @@ div#activity-feed-tutorial.no-content p.tleft {
 }
 .post-list .screenshot-container img {
   width: auto;
-  height: auto;
+  height: 240px;
   max-width: 100%;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
@@ -6299,10 +6295,10 @@ h2.label-topic_post .label-topic_post-msgid {
   border-top: 1px solid #ddd;
 }
 #reply-content .list .my {
-  background-color: #ecfdff;
+  background-color: #effbe7;
 }
 #reply-content .list > li.my:hover {
-  background-color: #e0f8fb;
+  background-color: #e6f9da;
 }
 .reply-list .icon-container {
   width: 50px;
@@ -6828,80 +6824,80 @@ body.search .search-content p.note {
   padding-left: 30px;
 }
 #help .help-content .note:before {
-  content: '◆';
+  content: 'ÃƒÂ¢Ã¢â‚¬â€Ã¢â‚¬Â ';
   margin-left: -30px;
   margin-right: 5px;
 }
 #help .help-content ul li:before,
 #help .help-content ol li:before {
-  content: '●';
+  content: 'ÃƒÂ¢Ã¢â‚¬â€Ã‚Â';
   margin: 0 0.2em 0 -1.2em;
 }
 #help .help-content ul ul li:before {
-  content: '○';
+  content: 'ÃƒÂ¢Ã¢â‚¬â€Ã¢â‚¬Â¹';
 }
 #help .help-content ul ul li {
   *list-style: circle;
 }
 #help .help-content ol li:nth-child(1):before {
-  content: '❶';
+  content: 'ÃƒÂ¢Ã‚ÂÃ‚Â¶';
 }
 #help .help-content ol li:nth-child(2):before {
-  content: '❷';
+  content: 'ÃƒÂ¢Ã‚ÂÃ‚Â·';
 }
 #help .help-content ol li:nth-child(3):before {
-  content: '❸';
+  content: 'ÃƒÂ¢Ã‚ÂÃ‚Â¸';
 }
 #help .help-content ol li:nth-child(4):before {
-  content: '❹';
+  content: 'ÃƒÂ¢Ã‚ÂÃ‚Â¹';
 }
 #help .help-content ol li:nth-child(5):before {
-  content: '❺';
+  content: 'ÃƒÂ¢Ã‚ÂÃ‚Âº';
 }
 #help .help-content ol li:nth-child(6):before {
-  content: '❻';
+  content: 'ÃƒÂ¢Ã‚ÂÃ‚Â»';
 }
 #help .help-content ol li:nth-child(7):before {
-  content: '❼';
+  content: 'ÃƒÂ¢Ã‚ÂÃ‚Â¼';
 }
 #help .help-content ol li:nth-child(8):before {
-  content: '❽';
+  content: 'ÃƒÂ¢Ã‚ÂÃ‚Â½';
 }
 #help .help-content ol li:nth-child(9):before {
-  content: '❾';
+  content: 'ÃƒÂ¢Ã‚ÂÃ‚Â¾';
 }
 #help .help-content ol li:nth-child(10):before {
-  content: '❿';
+  content: 'ÃƒÂ¢Ã‚ÂÃ‚Â¿';
 }
 #help .help-content ol li:nth-child(11):before {
-  content: '⓫';
+  content: 'ÃƒÂ¢Ã¢â‚¬Å“Ã‚Â«';
 }
 #help .help-content ol li:nth-child(12):before {
-  content: '⓬';
+  content: 'ÃƒÂ¢Ã¢â‚¬Å“Ã‚Â¬';
 }
 #help .help-content ol li:nth-child(13):before {
-  content: '⓭';
+  content: 'ÃƒÂ¢Ã¢â‚¬Å“Ã‚Â­';
 }
 #help .help-content ol li:nth-child(14):before {
-  content: '⓮';
+  content: 'ÃƒÂ¢Ã¢â‚¬Å“Ã‚Â®';
 }
 #help .help-content ol li:nth-child(15):before {
-  content: '⓯';
+  content: 'ÃƒÂ¢Ã¢â‚¬Å“Ã‚Â¯';
 }
 #help .help-content ol li:nth-child(16):before {
-  content: '⓰';
+  content: 'ÃƒÂ¢Ã¢â‚¬Å“Ã‚Â°';
 }
 #help .help-content ol li:nth-child(17):before {
-  content: '⓱';
+  content: 'ÃƒÂ¢Ã¢â‚¬Å“Ã‚Â±';
 }
 #help .help-content ol li:nth-child(18):before {
-  content: '⓲';
+  content: 'ÃƒÂ¢Ã¢â‚¬Å“Ã‚Â²';
 }
 #help .help-content ol li:nth-child(19):before {
-  content: '⓳';
+  content: 'ÃƒÂ¢Ã¢â‚¬Å“Ã‚Â³';
 }
 #help .help-content ol li:nth-child(20):before {
-  content: '⓴';
+  content: 'ÃƒÂ¢Ã¢â‚¬Å“Ã‚Â´';
 }
 #help .help-content ol li {
   *list-style-type: decimal;
@@ -7840,7 +7836,7 @@ body.search .search-content p.note {
     width: 100%;
   }
   #global-menu li.selected a {
-    border-bottom: 2px solid #009fe0;
+    border-bottom: 2px solid #5ac800;
   }
   #global-menu #global-my-menu {
     top: 62px;
@@ -8484,7 +8480,7 @@ body.search .search-content p.note {
   .community-list .users {
     margin-top: 1px;
     margin-right: 3px;
-    background-color: #e9e9e9;
+    background-color: #0e0e0e;
   }
   .community-card-list {
     margin: 0 0 5px;

@@ -14,6 +14,10 @@ function formHeaders($title) {
 
 function form_top_bar($cvid, $nickname, $pfp, $page) {
 	global $user;
+  global $db;
+
+  $query = $db->query("SELECT * FROM notifs WHERE rd_notif = 0 AND notif_to = '".$_SESSION['ciiverseid']."'");
+  $notif_count = mysqli_num_rows($query);
 
 	$pfp = user_pfp($cvid,0);
 
@@ -34,6 +38,12 @@ function form_top_bar($cvid, $nickname, $pfp, $page) {
 	$html2 = '<li id="global-menu-mymenu"><a href="/users/'. $cvid .'"><span class="icon-container ';
 	}
 
+  if($page == 'feed') {
+    $activity = '<li id="global-menu-feed" class="selected"><a href="/feed" class="symbol"><span>Activity Feed</span></a></li>';
+  } else {
+    $activity = '<li id="global-menu-feed"><a href="/feed" class="symbol"><span>Activity Feed</span></a></li>';
+  }
+
 				 if($user['user_type'] > 2) {$html3 = 'official-user"><img src="'.$pfp.'"></span><span>User Page</span></a></li>';} else {
 					$html3 = '"><img src="'.$pfp.'"></span><span>User Page</span></a></li>';
 				}
@@ -45,9 +55,9 @@ function form_top_bar($cvid, $nickname, $pfp, $page) {
 	}
 
 	if($page == 'updates') {
-	$html5 = '<li id="global-menu-news" class="selected"><a class="symbol" href="/notifications"><span class="badge" style="display: none;"></span></a></li>';
+	$html5 = '<li id="global-menu-news" class="selected"><a class="symbol" href="/notifications"><span class="badge" style="display: none;">0</span></a></li>';
 	} else {
-	$html5 = '<li id="global-menu-news"><a class="symbol" href="/notifications"><span class="badge" style="display: none;"></span></a></li>';
+	$html5 = '<li id="global-menu-news"><a class="symbol" href="/notifications"><span class="badge" '.($notif_count == 0 ? 'style="display: none;"' : 'style="display: block;"').'>'.$notif_count.'</span></a></li>';
 	}
 
 	$html6 = '
@@ -55,12 +65,13 @@ function form_top_bar($cvid, $nickname, $pfp, $page) {
 	<menu id="global-my-menu" class="invisible none">
 	<li><a href="/edit/profile" class="symbol my-menu-profile-setting"><span>Edit Profile</span></a></li>	
 	<li><a class="symbol my-menu-info" href="/changelog"><span>Ciiverse Changelog</span></a></li>
-	'.($user['user_type'] > 1 ? '<li><a class="symbol my-menu-info" href="/admin_panel.php"><span>Admin Panel</span></a></li>' : '').'
-	<li><a href="/login/logout.php" class="symbol my-menu-guide"><span>Log Out</span></a></li>
+  <li><a href="/rules" class="symbol my-menu-guide"><span>Ciiverse Rules</span></a></li>
+	'.($user['user_level'] > 0 ? '<li><a class="symbol my-menu-miiverse-setting" href="/admin_panel.php"><span>Admin Panel</span></a></li>' : '').'
+	<li><a href="/login/logout.php?csrftoken='.$_COOKIE['csrf_token'].'" class="symbol my-menu-guide"><span>Log Out</span></a></li>
 	</menu>';
 	$html7 = '</li>';
 
-	$finals = "$html1 $html2 $html3 $html4 $html5 $html6 $html7";
+	$finals = "$html1 $html2 $html3 $activity $html4 $html5 $html6 $html7";
 
 	return $finals;
 }
@@ -97,14 +108,19 @@ function form_post_thingy() {
   global $cid;
   global $row;
   global $user;
-        echo '<form method="post" action="/post.php">
-        <div style="margin-top:20px" class="feeling-selector js-feeling-selector test-feeling-selector"><label class="symbol feeling-button feeling-button-normal checked"><input type="radio" name="feeling_id" value="0" checked=""><span class="symbol-label">normal</span></label><label class="symbol feeling-button feeling-button-happy"><input type="radio" name="feeling_id" value="1"><span class="symbol-label">happy</span></label><label class="symbol feeling-button feeling-button-like"><input type="radio" name="feeling_id" value="2"><span class="symbol-label">like</span></label><label class="symbol feeling-button feeling-button-surprised"><input type="radio" name="feeling_id" value="3"><span class="symbol-label">surprised</span></label><label class="symbol feeling-button feeling-button-frustrated"><input type="radio" name="feeling_id" value="4"><span class="symbol-label">frustrated</span></label><label class="symbol feeling-button feeling-button-puzzled"><input type="radio" name="feeling_id" value="5"><span class="symbol-label">puzzled</span></label></div>
+        echo '
+        <form method="post" id="post-form" action="/post.php">
+        <div class="feeling-selector js-feeling-selector test-feeling-selector" style="display: none;"><label class="symbol feeling-button feeling-button-normal checked"><input type="radio" name="feeling_id" value="0" checked=""><span class="symbol-label">normal</span></label><label class="symbol feeling-button feeling-button-happy"><input type="radio" name="feeling_id" value="1"><span class="symbol-label">happy</span></label><label class="symbol feeling-button feeling-button-like"><input type="radio" name="feeling_id" value="2"><span class="symbol-label">like</span></label><label class="symbol feeling-button feeling-button-surprised"><input type="radio" name="feeling_id" value="3"><span class="symbol-label">surprised</span></label><label class="symbol feeling-button feeling-button-frustrated"><input type="radio" name="feeling_id" value="4"><span class="symbol-label">frustrated</span></label><label class="symbol feeling-button feeling-button-puzzled"><input type="radio" name="feeling_id" value="5"><span class="symbol-label">puzzled</span></label></div>
           <input type="hidden" name="communityid" value="'.$cid.'">
+          <input type="hidden" name="csrf_token" value="'.$_COOKIE['csrf_token'].'">
         <div class="textarea-container" align="center">
-    <textarea name="makepost" id="makepost" class="textarea-text textarea" maxlength="400" placeholder="Share your thoughts in a post to '.$row['community_name'].' Community" style="margin-top:20px"></textarea>
+    <textarea name="makepost" class="textarea-text textarea" maxlength="1000" placeholder="Share your thoughts in a post to '.$row['community_name'].' Community"></textarea>
   </div>
-  '.($user['can_post_images'] == 1 ? '<div align="center"><input type="text" placeholder="Screenshot URL" name="screenshot" maxlength="2000"></div>' : '').'
-  <div class="form-buttons">
+  <div id="url-stuff" style="display: none;" align="center">
+  '.($user['can_post_images'] == 1 ? '<input type="text" class="textarea" style="cursor: auto; height: auto;" placeholder="Screenshot URL" name="screenshot" maxlength="2000"><br>
+    ' : '').'
+  <input type="text" class="textarea" style="cursor: auto; height: auto;" placeholder="URL/Youtube video" name="url" maxlength="2000"></div>
+  <div class="form-buttons" style="display: none;">
     <input type="submit" class="black-button post-button" value="Send" name="create-post">
   </div>
 </form>';
@@ -119,10 +135,7 @@ function humanTiming($time) {
     if (strval($time) < 1) {
         $time = 1;
     }
-    if ($time <= 59){
-        return 'Less than a minute ago';
-    }
-    $tokens = array(86400 => 'day', 3600 => 'hour', 60 => 'minute');
+    $tokens = array(86400 => 'day', 3600 => 'hour', 60 => 'minute', 1 => 'second');
     foreach ($tokens as $unit => $text){
         if($time < $unit) continue;
         $numberOfUnits = floor($time / $unit);
@@ -131,7 +144,9 @@ function humanTiming($time) {
 }
 
 	function printOrganization($type,$custom) {
-	#Set the custom variable to 0 if you don't want a custom organization.
+	#Ignore the custom part of it because that doesn't work.
+  #ALTER TABLE `users` ADD `user_level` INT(11) NOT NULL AFTER `has_db_access`;
+
 	if($custom == 0) {
       if($type == 2) {
       echo '<span class="user-organization">Moderator</span>';
@@ -139,8 +154,10 @@ function humanTiming($time) {
       echo '<span class="user-organization">Admin</span>';
       }elseif($type == 4) {
       echo '<span class="user-organization">The person who created this terrible Miiverse clone.</span>';
-      }elseif($type > 4) {
-      echo '<span class="user-organization">God himself.</span>';
+      }elseif($type == 5) {
+      echo '<span class="user-organization">Donator</span>';
+      }elseif($type == 6) {
+      echo '<span class="user-organization">It\'s hip to be Pip.</span>';
       }
   } else {
   	echo '<span class="user-organization">'.$custom.'</span>';
@@ -156,9 +173,179 @@ function humanTiming($time) {
     		return 'Yeah!?';
     	}elseif($feeling == 4 || $feeling == 5) {
     		return 'Yeah...';
+    	}elseif($feeling == 69) {
+    		return 'Comedy 2018';
     	}else{
     		return 'No.';
     	}
     }
+
+    function community_info($cid,$info) {
+
+    	global $db;
+
+    	if($info == 'icon') {
+    		$query = $db->query("SELECT community_picture FROM communities WHERE id = $cid");
+    		$icon = mysqli_fetch_array($query);
+
+    		return $icon['community_picture'];
+    	}elseif ($info == 'name') {
+    		$query = $db->query("SELECT community_name FROM communities WHERE id = $cid");
+    		$name = mysqli_fetch_array($query);
+
+    		return $name['community_name'];
+    	}elseif ($info == 'type') {
+        $query = $db->query("SELECT type FROM communities WHERE id = $cid");
+        $type = mysqli_fetch_array($query);
+
+        return $type['type'];
+      }
+
+    }
+
+  function printFooter() {
+    echo '<div id="footer">
+        <div id="footer-inner">
+          <div class="link-container">
+            <p id="copyright"><a href="https://discord.gg/69kfXvU">Official Ciiverse discord server.</a></p>            
+            <p id="copyright"><a href="http://miiverse.nintendo.net">All credit goes to nintendo for making Miiverse.</a></p>
+          </div>
+        </div>
+      </div>';
+  }
+
+  function urlimageisvalid($image) {
+    #this code isn't mine sorry.
+    $params = array('http' => array(
+                  'method' => 'HEAD'
+               ));
+     $ctx = stream_context_create($params);
+     $fp = @fopen($image, 'rb', false, $ctx);
+     if (!$fp) 
+        return false;  // Problem with url
+
+    $meta = stream_get_meta_data($fp);
+    if ($meta === false)
+    {
+        fclose($fp);
+        return false;  // Problem reading data from url
+    }
+
+    $wrapper_data = $meta["wrapper_data"];
+    if(is_array($wrapper_data)){
+      foreach(array_keys($wrapper_data) as $hh){
+          if (substr($wrapper_data[$hh], 0, 19) == "Content-Type: image") // strlen("Content-Type: image") == 19 
+          {
+            fclose($fp);
+            return true;
+          }
+      }
+    }
+
+    fclose($fp);
+    return false;
+  }
+
+  function post_to_discord($post) {
+    $content = array("content" => $post);
+    $curl = curl_init("");
+    curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
+    curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($content));
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    return curl_exec($curl);
+  }
+
+  function getVideoID($url) {
+
+    $url = str_replace('https://www.youtube.com/watch?v=', '', $url);
+    $url = str_replace('https://youtu.be/', '', $url);
+    $url = str_replace('https://m.youtube.com/watch?v=', '', $url);
+
+    return $url;
+
+  }
+
+  function printPost($postid,$show_community) {
+
+    global $db;
+    global $user;
+
+    $query = $db->query("SELECT * FROM posts WHERE post_id = '$postid'");
+    $post = mysqli_fetch_array($query);
+    $query2 = $db->query("SELECT * FROM users WHERE ciiverseid = '".$post['owner']."'");
+    $users = mysqli_fetch_array($query2);
+    $query3 = $db->query("SELECT * FROM yeahs WHERE post_id = '$postid' AND type = 'post'");
+    $yeahs = mysqli_num_rows($query3);
+    $query4 = $db->query("SELECT * FROM comments WHERE post_id = '$postid'");
+    $comments = mysqli_num_rows($query4);
+
+    if(isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
+          if($post['owner'] == $_SESSION['ciiverseid']) {
+            $yeah_disabled = true;
+          } else {
+            $yeah_disabled = false;
+          }
+        } else {
+          $yeah_disabled = true;
+        }
+
+        if(isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
+        $check_yeah_added = $db->query("SELECT * FROM yeahs WHERE owner = '".$_SESSION['ciiverseid']."' AND post_id = ".$postid);
+        $yeahed = mysqli_num_rows($check_yeah_added);
+        } else {
+        $yeahed = 0;
+        }
+
+        if(strlen($post['content']) > 220) {
+          $content = mb_substr($post['content'],0,220).'...';
+        } else {
+          $content = $post['content'];
+        }
+
+        if($post['deleted'] == 1) {
+          $delete_type = 'Poster';
+        }elseif($post['deleted'] == 2) {
+          $delete_type = 'Moderator';
+        }elseif($post['deleted'] == 3) {
+          $delete_type = 'Administrator';
+        }elseif($post['deleted'] == 4) {
+          $delete_type = 'Owner';
+        }
+
+              echo '
+              <div id="post"  data-href="/post/'.$post['post_id'].'" class="post post-subtype-default trigger" tabindex="0">';
+
+              if($show_community == 1) { 
+              echo '<p class="community-container">
+<a class="test-community-link" href="/communities/'.$post['community_id'].'"><img src="'.community_info($post['community_id'],'icon').'" class="community-icon">'.community_info($post['community_id'],'name').' Community</a></p>';
+}
+
+ echo '<a href="/users/'.$post['owner'].'" class="icon-container '; if($users['user_type'] > 2) { echo 'official-user'; } echo '"><img src="' . htmlspecialchars(user_pfp($post['owner'],$post['feeling'])) . '" class="icon"></a>
+  <p class="user-name"><a href="/users/'.$post['owner'].'">' . htmlspecialchars($users['nickname']) . '</a></p>
+  <div class="timestamp-container"><span class="timestamp">'.humanTiming(strtotime($post['date_time'])).'</span></div>
+  <div class="body">
+  '.(strpos($post['web_url'], 'youtube') || strpos($post['web_url'], 'youtu.be') ? '<a href="/post/'.$post['post_id'].'" class="screenshot-container video"><img height="48" src="https://i.ytimg.com/vi/'.getVideoID($post['web_url']).'/default.jpg"></a>' : '').'
+  '.($post['deleted'] > 0 ? '<p class="deleted-message">Deleted by '.$delete_type.''.($post['deleted'] > 1 ? '<br>Post ID: '.$post['post_id'] : '').'</p>' : '').'
+    <div class="post-content">
+        <div class="tag-container">
+        </div>';
+        if($post['deleted'] > 0 && $_SESSION['ciiverseid'] !== $post['owner']) { } else {  
+           echo ' '.(empty($post['screenshot']) ? '' : '<a class="screenshot-container still-image" href="/post/'.$post['post_id'].'"><img src="'.$post['screenshot'].'"></a>').'
+            <p class="post-content-text" id="not-full-post">' . htmlspecialchars($content) . '</p>
+            <p class="post-content-text" id="full-post" style="display: none;">' . htmlspecialchars($post['content']) . '</p>
+            '.(strlen($post['content']) > 220 ? '<p id="show_full"><a class="show_full_post">Show full post</a></p>' : '').'';
+  }
+    if($post['deleted'] == 0) {
+          echo '<div class="post-meta">
+      <button '.($yeah_disabled == true ? 'disabled' : '').' class="symbol submit empathy-button" id="'.$post['post_id'].'" data-yeah-type="post" data-remove="'.$yeahed.'" type="button"><span class="empathy-button-text">'.($yeahed == 0 ? print_yeah($post['feeling']) : 'Unyeah').'</span></button>
+      <div class="empathy symbol"><span class="symbol-label">Yeahs</span><span class="empathy-count">'.$yeahs.'</span></div>
+      <div class="reply symbol"><span class="symbol-label">Comments</span><span class="reply-count">'.$comments.'</span></div>
+  </div>';
+      }
+echo '</div>
+</div>
+</div>';
+
+  }
 
 ?>

@@ -1,7 +1,7 @@
 <?php 
 
-require('../lib/connect.php');
 session_start();
+require('../lib/connect.php');
 
 if($_SERVER['REQUEST_METHOD'] == 'POST') {
 
@@ -48,10 +48,11 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
         if($count !== 1) {
 
 	if(!isset($err)) {
-            $sql_register = "INSERT INTO users (nickname, pfp, ciiverseid, password, user_token, user_type) VALUES ('".mysqli_real_escape_string($db,$nickname)."', '".mysqli_real_escape_string($db,$pfp)."', '".mysqli_real_escape_string($db,$ciiverseid)."', '".mysqli_real_escape_string($db,$password_hash)."', '".mysqli_real_escape_string($db,$token)."', 1)";
+            $sql_register = "INSERT INTO users (nickname, ciiverseid, password, user_token, user_type) VALUES ('".mysqli_real_escape_string($db,$nickname)."', '".mysqli_real_escape_string($db,$ciiverseid)."', '".mysqli_real_escape_string($db,$password_hash)."', '".mysqli_real_escape_string($db,$token)."', 1)";
             mysqli_query($db,$sql_register);
 
-            header("location: /login/login.php?token=$token");
+            header('location: /login/login.php?token='.$token);
+
             }
 
         } else {
