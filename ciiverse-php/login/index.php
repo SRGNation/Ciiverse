@@ -43,7 +43,8 @@ $count = mysqli_num_rows($result);
 <body>
     <div id="wrapper">
     <div id="main-body">
-<div align="center" <h3 class="sign_in_text">Sign in<p></p>
+<div align="center"><h3 class="sign_in_text">Sign in</h3>
+<p>If you don't have an account, you can <a href="/register/">sign up</a> here.</p>
 </div>
 <div align="center">
 <br>

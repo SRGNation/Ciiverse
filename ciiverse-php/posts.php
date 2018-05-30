@@ -65,7 +65,7 @@ if(isset($_SESSION['loggedin'])) {
   ?>
 	</head>
 	<body>
-		<div id="wrapper">
+		<div id="wrapper" <?php if(!$_SESSION['loggedin']) { echo 'class="guest"'; } ?>>
 			<div id="sub-body">
 				<?php 
 				  if(isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {

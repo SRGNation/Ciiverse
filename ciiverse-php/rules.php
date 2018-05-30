@@ -17,7 +17,7 @@ include('lib/htm.php');
   ?>
 </head>
 <body id="help">
-<div id="wrapper">
+<div id="wrapper" <?php if(!$_SESSION['loggedin']) { echo 'class="guest"'; } ?>>
   <div id="sub-body">
       <?php
   if(isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
@@ -38,7 +38,7 @@ include('lib/htm.php');
 
       <h2>Let's get the obvious ones out of the way first</h2>
 
-<h3>NSFW and other stuff</h3>
+      <h3>NSFW and other stuff</h3>
       
       
       <p>Well usually you have to have image posting permissions to post images. Please do not post NSFW. If you do, you will usually get your image posting permissions taken away. But if you post gore and other illegal stuff, you will get IP banned and an account deletion.</p>
@@ -46,16 +46,12 @@ include('lib/htm.php');
 
       <h3>Spam</h3>
       <p>Obviously, don't spam. This sending the same thing multiple times, or just sending random letters and numbers multiple times. Your account will be deleted and you will get IP banned if you do. So yeah.</p><br><h2>Now let's get the rest of the rules out of the way.</h2>
-<h3>Using words like "Normie"</h3><p>If you use the word "Normie" unironically in your post, it will be deleted. I don't like that word for some reasons, so don't use it please.</p>
 
-<h3>Drama</h3>
-<p>Causing drama here could get your account disabled temporarily. So don't cause drama here.</p>
+      <h3>Drama</h3>
+      <p>Causing drama here could get your account disabled temporarily. So don't cause drama here.</p>
 
-<h3>Yeahbombing</h3>
-<p>This is techinacally spamming. If you are caught yeahbombing, then your yeahs will be purged and you will get disabled from yeahing. Making a new account just to yeahbomb will get your account deleted and you will get IP banned.</p>
-
-<h3>Creating an account just to hate on Ciiverse</h3>
-<p>If you do this you can go fuck yourself lol.</p>
+      <h3>Yeahbombing</h3>
+      <p>This is techinacally spamming. If you are caught yeahbombing, then your yeahs will be purged and you will get disabled from yeahing. Making a new account just to yeahbomb will get your account deleted and you will get IP banned.</p>
 
 <?php
 

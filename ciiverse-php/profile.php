@@ -111,7 +111,7 @@ if($page == 4 & $userid != $_SESSION['ciiverseid']) {
     ?>
   </head>
 	<body>
-		<div id="wrapper">
+		<div id="wrapper" <?php if(!$_SESSION['loggedin']) { echo 'class="guest"'; } ?>>
 			<div id="sub-body">
          <?php 
 

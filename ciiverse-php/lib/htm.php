@@ -78,12 +78,26 @@ function form_top_bar($cvid, $nickname, $pfp, $page) {
 
 function ftbnli($page) {
 	#This is for when you're not logged in.
-		$html1 = '<menu id="global-menu">
+
+  $html1 = '<menu id="global-menu">
+  <li id="global-menu-logo"><h1><a href="/"><img src="/img/ciiverse.png" alt="Miiverse" width="165" height="30"></a></h1></li>';
+ 
+  $html2 = '
+  <li id="global-menu-login">
+  <a href="/login/" class="login">
+  <input type="image" alt="Sign in" src="/img/signin_base.png">
+  </a>
+  </li>
+  '; 
+
+  $finals = "$html1 $html2";
+
+	/*	$html1 = '<menu id="global-menu">
 	<li id="global-menu-logo"><h1><a href="/"><img src="/img/ciiverse.png" alt="Miiverse" width="165" height="30"></a></h1></li>
 	<li id="global-menu-list">
 	<ul>';
-
-	if($page == 'communities') {
+ 
+  if($page == 'communities') {
 	$html2 = '<li id="global-menu-community" class="selected" align="right"><a href="/" class="symbol"><span>Communities</span></a></li>';
 	} else {
 	$html2 = '<li id="global-menu-community" align="right"><a href="/" class="symbol"><span>Communities</span></a></li>';
@@ -97,9 +111,9 @@ function ftbnli($page) {
 	</menu>
 	</li>
 	</li>
-	';
+	'; 
 
-	$finals = "$html1 $html2 $html3";
+	$finals = "$html1 $html2 $html3"; */
 
 	return $finals;
 }
@@ -144,10 +158,6 @@ function humanTiming($time) {
 }
 
 	function printOrganization($type,$custom) {
-	#Ignore the custom part of it because that doesn't work.
-  #ALTER TABLE `users` ADD `user_level` INT(11) NOT NULL AFTER `has_db_access`;
-
-	if($custom == 0) {
       if($type == 2) {
       echo '<span class="user-organization">Moderator</span>';
       }elseif($type == 3) {
@@ -159,10 +169,7 @@ function humanTiming($time) {
       }elseif($type == 6) {
       echo '<span class="user-organization">It\'s hip to be Pip.</span>';
       }
-  } else {
-  	echo '<span class="user-organization">'.$custom.'</span>';
-  }
-    }
+ }
 
     function print_yeah($feeling) {
     	if($feeling == 0 || $feeling == 1) {
@@ -247,8 +254,10 @@ function humanTiming($time) {
   }
 
   function post_to_discord($post) {
+    global $discord_webhook;
+
     $content = array("content" => $post);
-    $curl = curl_init("");
+    $curl = curl_init($discord_webhook);
     curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
     curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($content));
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);

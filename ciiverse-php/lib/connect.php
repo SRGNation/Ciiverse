@@ -1,6 +1,8 @@
 <?php
 
    error_reporting(E_ALL);
+   
+   $discord_webhook = '';
 
    function rip() {
       http_response_code(503);
