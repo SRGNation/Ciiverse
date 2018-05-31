@@ -41,8 +41,13 @@ if(isset($_POST['pfp_type'])) {
   $pfp_type = 0;
 }
 
+if(isset($_POST['hates_yeah_notifs'])) {
+  $hates_yeah_notifs = 1;
+} else {
+  $hates_yeah_notifs = 0;
+}
+
 if($pfp_type == 1) {
-#Haha frick you arian kordi
 /* $ch = curl_init();
       curl_setopt_array($ch, array(
         CURLOPT_URL => 'https://ariankordi.net/seth/'. $nnid,
@@ -96,7 +101,7 @@ $mii_hash = mysqli_real_escape_string($db,$body); */
 
 } else {
 
-  if(empty($user['mii_hash'])) {
+if(empty($user['mii_hash'])) {
     $mii_hash = '';
   } else {
     $mii_hash = $user['mii_hash'];
@@ -104,8 +109,7 @@ $mii_hash = mysqli_real_escape_string($db,$body); */
 
 }
 
-$sql = "UPDATE users SET nickname = '$nick', prof_desc = '$prof_desc', pfp = '$profile_pic', pfp_type = '$pfp_type', nnid = '$nnid', mii_hash = '$mii_hash' WHERE ciiverseid = '$ciiverseid' ";
-mysqli_query($db,$sql);
+$db->query("UPDATE users SET nickname = '$nick', prof_desc = '$prof_desc', pfp = '$profile_pic', pfp_type = '$pfp_type', nnid = '$nnid', mii_hash = '$mii_hash', hates_yeah_notifs = $hates_yeah_notifs WHERE ciiverseid = '$ciiverseid' ");
 
 /* $_SESSION['prof_desc'] = $prof_desc;
 $_SESSION['nickname'] = $nick;
@@ -229,6 +233,10 @@ $userid = $_SESSION['ciiverseid'];
         <p class="settings-label">Profile Comment</p>
     </li><li class="setting-profile-comment">
         <textarea id="prof_desc" class="textarea" name="prof_desc" maxlength="400" placeholder="Write about yourself here."><?php echo htmlspecialchars($user['prof_desc']); ?></textarea></li>
+        <li>
+          <p class="settings-label">Yeah Notifs</p>
+          <input type="checkbox" <?php if($user['hates_yeah_notifs'] == 1) { echo 'checked=""'; } ?> name="hates_yeah_notifs"><label for="hates_yeah_notifs">Don't give me yeah notifs</label>
+        </li>
 
     </ul>   
        <?php  /* <p><br>Other settings:<br></p>

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 28, 2018 at 10:10 PM
+-- Generation Time: May 31, 2018 at 09:47 PM
 -- Server version: 10.1.29-MariaDB
 -- PHP Version: 7.2.0
 
@@ -150,6 +150,7 @@ CREATE TABLE `users` (
   `pfp_type` int(1) NOT NULL,
   `user_type` int(1) NOT NULL,
   `can_post_images` int(1) NOT NULL,
+  `hates_yeah_notifs` tinyint(1) NOT NULL,
   `has_db_access` tinyint(1) NOT NULL,
   `user_level` int(11) NOT NULL,
   `ip` varchar(64) NOT NULL

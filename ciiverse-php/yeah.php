@@ -39,8 +39,15 @@ if($post['owner'] == $_SESSION['ciiverseid']) {
 			exit("error");
 		}
 
+		#This will check if the user you're sending a Yeah! to hates yeah notifs. If that is true, it will not send a yeah notif to the user.
+		$fucking = $db->query("SELECT hates_yeah_notifs FROM users WHERE ciiverseid = '".$post['owner']."'");
+		$h = mysqli_fetch_array($fucking);
+
 		$db->query("INSERT INTO yeahs (post_id, type, owner) VALUES ($post_id, '$type', '".$_SESSION['ciiverseid']."')");
-		$db->query("INSERT INTO notifs (notif_to, notif_by, type, post_id) VALUES ('".$post['owner']."', '".$_SESSION['ciiverseid']."', ".($type == 'post' ? 1 : 2).", $post_id)");
+
+		if($h['hates_yeah_notifs'] == 0) {
+			$db->query("INSERT INTO notifs (notif_to, notif_by, type, post_id) VALUES ('".$post['owner']."', '".$_SESSION['ciiverseid']."', ".($type == 'post' ? 1 : 2).", $post_id)");
+		}
 
 		#This will update the yeah on the post/comment.
 		$no_of_yeahs = $db->query("SELECT * FROM yeahs WHERE post_id = $post_id");
