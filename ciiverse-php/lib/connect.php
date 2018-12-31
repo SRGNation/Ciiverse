@@ -4,6 +4,9 @@
    
    $discord_webhook = '';
 
+   #This is just a tiny feature I made so you're able to enable/disable custom profile links.
+   $allow_url_avatars = true;
+
    function rip() {
       http_response_code(503);
       exit('Ciiverse is having trouble connecting to the database right now. Please come back later.');

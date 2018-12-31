@@ -20,7 +20,11 @@ if($_POST['csrf_token'] !== $_COOKIE['csrf_token']) {
   exit();
 }
 
-$profile_pic = mysqli_real_escape_string($db,$_POST['prof_pic']);
+if($allow_url_avatars) {
+  $profile_pic = mysqli_real_escape_string($db,$_POST['prof_pic']);
+} else {
+  $profile_pic = ''
+}
 $prof_desc = mysqli_real_escape_string($db,$_POST['prof_desc']);
 $nnid = mysqli_real_escape_string($db,$_POST['nnid']);
 if(!empty($_POST['nickname'])) {
@@ -229,7 +233,7 @@ $userid = $_SESSION['ciiverseid'];
          <li> 
       <input type="text" class="textarea" style="cursor: auto; height: auto;" name="nnid" maxlength="16" placeholder="NNID" value="<?php echo $user['nnid']; ?>"><br>
       <input type="checkbox" <?php if($user['pfp_type'] == 1) {echo 'checked=""';} ?> name="pfp_type"><label for="pfp_type">Use Mii from the NNID for your profile picture.</label></li>
-<br><li><input maxlength="2000" class="textarea" style="cursor: auto; height: auto;" type="text" placeholder="Profile Picture URL" id="prof_pic" name="prof_pic" value="<?php echo $user['pfp']; ?>"></li>
+<br><?php if($allow_url_avatars) {echo '<li><input maxlength="2000" class="textarea" style="cursor: auto; height: auto;" type="text" placeholder="Profile Picture URL" id="prof_pic" name="prof_pic" value="'.$user['pfp'].'"></li>';} ?>
         <p class="settings-label">Profile Comment</p>
     </li><li class="setting-profile-comment">
         <textarea id="prof_desc" class="textarea" name="prof_desc" maxlength="400" placeholder="Write about yourself here."><?php echo htmlspecialchars($user['prof_desc']); ?></textarea></li>
