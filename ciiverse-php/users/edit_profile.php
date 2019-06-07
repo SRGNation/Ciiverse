@@ -23,7 +23,7 @@ if($_POST['csrf_token'] !== $_COOKIE['csrf_token']) {
 if($allow_url_avatars) {
   $profile_pic = mysqli_real_escape_string($db,$_POST['prof_pic']);
 } else {
-  $profile_pic = ''
+  $profile_pic = '';
 }
 $prof_desc = mysqli_real_escape_string($db,$_POST['prof_desc']);
 $nnid = mysqli_real_escape_string($db,$_POST['nnid']);
