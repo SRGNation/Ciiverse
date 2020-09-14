@@ -157,7 +157,7 @@ body {
   margin: auto 0;
   text-align: left;
   background-color: #f4f4f4;
-  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAArUlEQVQoFYWQuwrCQBBFd42FlaYQRMRCO3vBNpA/8HNtBbt04gcItnaKoLKegRnYTRYzcLjzuLNh4kMILooh+SeqO6kYJOawhzE0cIBsDLRboRPwsIUFZMMWTM1UWNJWMx4ZPHV4Rq9to9U+OlpeHcHDhjmNF3LzHc01yBdPEOwvkXdiQ6fW7gp9QWM3aD+RWVI5N5X638KF+VuXvqjUru+GEs8SbnCH3gXxJPEDtBsiPW8IwCQAAAAASUVORK5CYII=');
+  background: #fff url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHgAAAB4CAIAAAC2BqGFAAADF0lEQVR4nO2dwW7bMBAFuRLz/5+bgyWyhwUE13ELtN43EIE3pyQHZj1YUoRMPcX393fT8Hg8zvOcc4rGryUi9n3/+voSjb+Jxm2tbdsWEbrxa4mIbVPa0A1tnrFoCIuGsGgIi4awaAiLhrBoCIuGsGgIi4awaAiLhrBoCIuGsGgIi4awaAiLhrBoCKHoOecqX4E3fbUS0RGxluUkaxZ9c6/q6DnnGEM0uIgxhq456kVnO+fRmYWaOqvNshVNXS96znkcx0JnlC5S9HEcisorRWcjnOd5nmfhsDBX/bV93UtGyZrGGFnl20XjqvsO58Su8l7qzF+zqfd9z0NiJQ1eIzovI1cv/KwsK87zbTcRnTVHxMtF+8V1RJQU3B+Px4eH+66i2zvFWeW2bYVFl/B89Wu/V54/jzHGGCXNMcbo53l+uA/70zRsraXZfd9rp2EJ1ySLiLcTMS1nG30oes7ZdZuw/Ay99+zl+yhOsp7s1og4jqP9Ycn++ff/QHuvI3u53amRX8jCrjp1qETnitF7v8+i/BeeZ57oX6judaToG64Yb8nth/Ryrerom2zj/gnp0xXCpWOVdk6yqZdcOhQjq1lv6TAvWDSERUNYNIRFQ1g0hEVDWDSERUNYNIRFQ1g0hEVDWDSERUNYNIRFQ1g0hEVDWDSERUNYNIRFQ1g0hEVDWDSERUNYNIRFQ1g0hEVDWDSERUNYNIRFQ1g0hEVDWDSERUNYNIRFQ1g0hEVDSESvFS34jK5yYWSmLudTgTpPVSVamvMpQpqnKlw6dDmf5QB5qsKlQ5fzWQ6Qp6rddYhyPgvB8lT755krfM5nCWSe6pyzXwo+GQXO+SyBzFMdY/SSd7uTOZ8lwHmq+77XpO2SOZ8l8HmqNaLhnE8dujzVyl0HlvMpRZSnKnmZgjrnU4Q0T1XyMgV1zqcCdZ6qMDJTl/MpQrojUt3rWKudE2meqrDp1nKtrnax2b0uFg1h0RAWDWHREBYNYdEQFg1h0RAWDWHREBYNYdEQFg1h0RAWDWHREBYNYdEQFg0hFL3W0xXS5ypaa78A+zg9ngAQ62UAAAAASUVORK5CYII=);
   background-attachment: fixed;
 }
 #sub-body {
@@ -1306,6 +1306,66 @@ h2.label-topic .with-filter-right {
   width: 22px;
   height: 22px;
 }
+.icon-container.official-developer {
+  position: relative;
+}
+.icon-container.official-developer:after {
+  content: url("/img/php-badge.png");
+  position: absolute;
+  display: block;
+  top: 0;
+  left: 0;
+  width: 22px;
+  height: 22px;
+}
+.icon-container.official-admin {
+  position: relative;
+}
+.icon-container.official-admin:after {
+  content: url("/img/official-admin.png");
+  position: absolute;
+  display: block;
+  top: 0;
+  left: 0;
+  width: 22px;
+  height: 22px;
+}
+.icon-container.official-mod {
+  position: relative;
+}
+.icon-container.official-mod:after {
+  content: url("/img/official-moderator.png");
+  position: absolute;
+  display: block;
+  top: 0;
+  left: 0;
+  width: 22px;
+  height: 22px;
+}
+.icon-container.official-pip {
+  position: relative;
+}
+.icon-container.official-pip:after {
+  content: url("/img/pipinstalldjango.png");
+  position: absolute;
+  display: block;
+  top: 0;
+  left: 0;
+  width: 22px;
+  height: 22px;
+}
+.icon-container.official-staff {
+  position: relative;
+}
+.icon-container.official-staff:after {
+  content: url("/img/official-staff.png");
+  position: absolute;
+  display: block;
+  top: 0;
+  left: 0;
+  width: 22px;
+  height: 22px;
+}
 .user-community .icon-container {
   position: relative;
   overflow: visible;
@@ -1331,7 +1391,7 @@ h2.label-topic .with-filter-right {
   border-radius: 5px;
   border: 1px solid #ddd;
 }
-.user-community.official-user .icon-container:after {
+/* .user-community.official-user .icon-container:after {
   content: url("/img/official-user-mini.png?x0Bort0kL7ZYsffoDnNvnA");
   position: absolute;
   display: block;
@@ -1340,7 +1400,6 @@ h2.label-topic .with-filter-right {
   width: 17px;
   height: 17px;
 }
-/*
 .post-permalink-feeling-icon {
   float: left;
   display: block;
@@ -1401,6 +1460,15 @@ h2.label-topic .with-filter-right {
 }
 .button.rm-post-button:before {
     content: "d"!important
+}
+.button.edit-post-button:before {
+    content: "J"!important
+}
+.button.profile-post-button:before {
+    content: "P"!important;
+}
+.button.profile-post-button.done:before {
+    content: "s"!important;
 }
 .button.edit-button:hover {
   text-decoration: none;
@@ -3303,19 +3371,19 @@ input.file-button {
 }
 .sidebar-setting .sidebar-menu-setting:before {
   content: "Y";
-  color: #5ac800;
+  color: #009fe0;
 }
 .sidebar-setting .sidebar-menu-info:before {
   content: "w";
-  color: #5ac800;
+  color: #009fe0;
 }
 .sidebar-setting .sidebar-menu-support:be fore {
   content: "h";
-  color: #5ac800;
+  color: #009fe0;
 }
 .sidebar-setting .sidebar-menu-guide:before {
   content: "g";
-  color: #5ac800;
+  color: #009fe0;
 }
 .sidebar-setting .sidebar-menu-diary:before {
   content: "%";
@@ -3340,14 +3408,14 @@ input.file-button {
 }
 .sidebar-setting .sidebar-menu-post:before {
   content: "p";
-  color: #2fb9f3;
+  color: #009fe0;
 }
 .sidebar-setting .sidebar-menu-album:before {
   content: "X";
 }
 .sidebar-setting .sidebar-menu-empathies:before {
   content: "e";
-  color: #29a3ff;
+  color: #009fe0;
 }
 #sidebar-profile-body {
   padding: 0 15px 10px;
@@ -3393,6 +3461,12 @@ input.file-button {
 #sidebar-profile-body .id-name {
   color: #969696;
   font-size: 14px;
+  margin-left: 85px;
+  font-weight: normal;
+}
+#sidebar-profile-body .admin-level {
+  color: #009fe0b5;
+  font-size: 10px;
   margin-left: 85px;
   font-weight: normal;
 }
@@ -3549,7 +3623,7 @@ input.file-button {
   vertical-align: bottom;
 }
 .user-data h4 span {
-  background-color: #5ac800;
+  background-color: #009fe0;
   padding: 2px 12px 1px;
   display: block;
   white-space: nowrap;
@@ -5410,7 +5484,7 @@ div#activity-feed-tutorial.no-content p.tleft {
 .empathy-container a:before {
   content: "e";
   font-size: 16px;
-  color: #5ac800;
+  color: #009fe0;
   margin-right: 4px;
   margin-top: -3px;
   display: inline-block;
@@ -5422,7 +5496,7 @@ div#activity-feed-tutorial.no-content p.tleft {
   font-size: 16px;
 }
 .empathy-body a {
-  color: #5ac800;
+  color: #009fe0;
 }
 .other-empathy-cotainer {
   text-align: right;
@@ -6192,7 +6266,7 @@ h2.label-topic_post .label-topic_post-msgid {
   height: 7px;
   top: -6px;
   left: 22px;
-  background: url('/img/balloon-part-empathy.png?GXwAkHrU_NISgJHXZBTBpg') no-repeat 0 0;
+  background: url('/img/balloon-part-empathy.png') no-repeat 0 0;
   -webkit-background-size: 10px 7px;
   -moz-background-size: 10px 7px;
   -ms-background-size: 10px 7px;
@@ -6468,7 +6542,7 @@ h2.label-topic_post .label-topic_post-msgid {
 .user-organization {
   display: block;
   font-size: 12px;
-  color: #5ac800;
+  color: #2fb9f3;
   font-style: italic;
 }
 body.search form.search {
@@ -8272,13 +8346,13 @@ body.search .search-content p.note {
   .simple-wrapper.simple-wrapper-content #main-body {
     border: none;
   }
-  #empathy-content .icon-container.official-user:after,
+  /* #empathy-content .icon-container.official-user:after,
   #reply-content .icon-container.official-user:after,
   .news-list .icon-container.official-user:after {
     content: url("/img/official-user-mini.png?x0Bort0kL7ZYsffoDnNvnA");
     width: 17px;
     height: 17px;
-  }
+  } */
   .button {
     font-size: 14px;
     width: 85%;

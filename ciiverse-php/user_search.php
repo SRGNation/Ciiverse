@@ -8,6 +8,10 @@ include('lib/users.php');
 
 $search = mysqli_real_escape_string($db,$_GET['query']);
 
+if(strlen($search) < 4) {
+	exit("search query is too short.");
+}
+
 $query = $db->query("SELECT * FROM users WHERE ciiverseid LIKE '%$search%' OR nickname LIKE '%$search%' OR nnid LIKE '%$search%' ");
 
 $q_count = mysqli_num_rows($query);
@@ -48,23 +52,14 @@ $q_count = mysqli_num_rows($query);
 				if($q_count > 0) {
 				while($u_search = mysqli_fetch_array($query)) {
 
-				$o_length = mb_strlen($u_search['prof_desc']);
-
-				if($o_length > 50) {
-					$alter_text = mb_substr($u_search['prof_desc'],0,75);
-					$text = $alter_text.'...';
-				} else {
-					$text = $u_search['prof_desc'];
-				}
-
 				echo '<li class="trigger" data-href="/users/'.$u_search['ciiverseid'].'">
-				<a href="/users/'.$u_search['ciiverseid'].'" class="icon-container '.($u_search['user_type'] > 2 ? 'official-user' : '').'"><img class="icon" src="'.user_pfp($u_search['ciiverseid'],0).'"></a>
+				<a href="/users/'.$u_search['ciiverseid'].'" class="icon-container '.print_badge($u_search['ciiverseid']).'"><img class="icon" src="'.user_pfp($u_search['ciiverseid'],0).'"></a>
 				<div class="body">
 				<p class="title">
-				<span class="nick-name"><a href="/users/'.$u_search['ciiverseid'].'">'.$u_search['nickname'].'</a></span>
+				<span class="nick-name"><a href="/users/'.$u_search['ciiverseid'].'">'.htmlspecialchars($u_search['nickname']).'</a></span>
 				<span class="id-name">'.$u_search['ciiverseid'].'</span>
 				</p>
-				<p class="text">'.$text.'</p>
+				<p class="text">'.htmlspecialchars($u_search['prof_desc']).'</p>
 				</div>
 				</li>';
 			}

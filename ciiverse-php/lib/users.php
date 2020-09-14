@@ -27,14 +27,14 @@ function user_pfp($cii_id,$feeling) {
   if($user['pfp_type'] == 1) {
 
     if(empty($user['mii_hash'])) {
-    return '/img/defult_pfp_'.$feel.'.png';
+    return htmlspecialchars('/img/defult_pfp_'.$feel.'.png');
     } else {
-        return 'https://mii-secure.cdn.nintendo.net/'.$user['mii_hash'].'_'.$feel.'_face.png';
+        return htmlspecialchars('https://mii-secure.cdn.nintendo.net/'.$user['mii_hash'].'_'.$feel.'_face.png');
     }
   } else {
   if(!empty($user['pfp'])) {
-  return $user['pfp']; } else {
-  return '/img/defult_pfp_'.$feel.'.png'; 
+  return htmlspecialchars($user['pfp']); } else {
+  return htmlspecialchars('/img/defult_pfp_'.$feel.'.png'); 
   }
 }
 

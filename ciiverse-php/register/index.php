@@ -26,11 +26,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
             $err = 'Passwords don\'t match';
         }
 
-        $password_hash = hash('sha512', $password);
-        $cvid_hash = hash('sha512', $ciiverseid);
-
-        $token = "$password_hash $cvid_hash";
-        $token = str_replace(' ', 'a', $token);
+        $password_hash = password_hash($password, PASSWORD_DEFAULT);
 
         if(!preg_match('/^[a-zA-Z0-9_-]+$/', $ciiverseid)) {
             $err = 'Ciiverse ID\'s can only contain letters, numbers, dashes, and underscores.';
@@ -40,6 +36,19 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
             $err = 'The needed feilds are empty.';
         }
 
+        if(!empty(RECAPTCHA_SECRET)) {
+            $ch = curl_init('https://www.google.com/recaptcha/api/siteverify');
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query(['secret' => RECAPTCHA_SECRET, 'response' => $_POST['g-recaptcha-response'], 'remoteip' => $_SERVER['REMOTE_ADDR']]));
+            $response = curl_exec($ch);
+            curl_close($ch);
+            $responseJSON = json_decode($response);
+            if($responseJSON->success == 0) {
+                $err = 'The ReCAPTCHA was not solved correctly.';
+            }
+        }
+
         $sql = "SELECT id FROM users WHERE ciiverseid = '$ciiverseid' ";
         $result = mysqli_query($db,$sql);
         $row = mysqli_fetch_array($result,MYSQLI_ASSOC);
@@ -47,11 +56,43 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         if($count !== 1) {
 
-	if(!isset($err)) {
-            $sql_register = "INSERT INTO users (nickname, ciiverseid, password, user_token, user_type) VALUES ('".mysqli_real_escape_string($db,$nickname)."', '".mysqli_real_escape_string($db,$ciiverseid)."', '".mysqli_real_escape_string($db,$password_hash)."', '".mysqli_real_escape_string($db,$token)."', 1)";
-            mysqli_query($db,$sql_register);
+	    if(!isset($err)) {
+            $stmt = $db->prepare('INSERT INTO users (nickname, ciiverseid, password, user_type) VALUES (?, ?, ?, 1)');
+            $stmt->bind_param('sss', $nickname, $ciiverseid, $password_hash);
+            $stmt->execute();
 
-            header('location: /login/login.php?token='.$token);
+            $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            $charactersLength = strlen($characters);
+            $randstring = '';
+            for ($i = 0; $i < 60; $i++) {
+                $randstring .= $characters[rand(0, $charactersLength - 1)];
+            }
+            
+            $token = $randstring;
+            $token_hash = hash('sha512', $token);
+
+            $stmt = $db->prepare('INSERT INTO sessions (token, owner, ip) VALUES (?, ?, ?)');
+            $stmt->bind_param('sss', $token_hash, $ciiverseid, $_SERVER['REMOTE_ADDR']);
+            $stmt->execute();
+
+            $_SESSION['loggedin'] = true;
+            $_SESSION['ciiverseid'] = $ciiverseid;
+            $_SESSION['pfp'] = null;
+            $_SESSION['nickname'] = null;
+            setcookie('login_magic', $token, time() + (86400 * 90), '/');
+
+            $csrf = "";
+            $characters = array_merge(range('A','Z'), range('a','z'), range('0','9'));
+            $max = count($characters) - 1;
+            for ($i = 0; $i < 32; $i++) {
+                $rand = mt_rand(0, $max);
+                $csrf .= $characters[$rand];
+            }
+
+            setcookie('csrf_token', $csrf, time() + (86400 * 90), '/');
+            header("location: /");
+
+            //header('location: /login/login.php?token='.$token);
 
             }
 
@@ -63,6 +104,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 ?>
 
 <html>
+<head>
 <title>Create an account - Ciiverse</title>
 <link rel="shortcut icon" href="/img/icon.png">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -93,7 +135,10 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
     <label>
         <input type="password" name="password_retype" placeholder="Retype Password" maxlength="32" />
     </label>
-
+    <?php if(!empty(RECAPTCHA_KEY)) { ?><br><br>
+        <script src="https://www.google.com/recaptcha/api.js"></script>
+        <div class="g-recaptcha" style="display:inline-block" data-sitekey="<?=htmlspecialchars(RECAPTCHA_KEY)?>"></div>
+    <?php } ?>
 </div>
 
 <?php 
@@ -111,6 +156,4 @@ if(isset($err)) {
     </div>
         </div>
     		</div>
-
-
 </body></html>

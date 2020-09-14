@@ -4,6 +4,7 @@ function formHeaders($title) {
 
 	echo '<title>'.$title.'</title>
 <link rel="stylesheet" href="/offdevice.css"></link>
+'.(isset($_COOKIE['dark_mode']) ? '<link rel="stylesheet" href="/dark.css"></link>' : '').'
 <link rel="shortcut icon" href="/img/icon.png" />
 <script async src="https://www.google-analytics.com/analytics.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -30,12 +31,12 @@ function form_top_bar($cvid, $nickname, $pfp, $page) {
 
 	if($page == 'user') {
 		if($cvid == $userid) {
-	$html2 = '<li id="global-menu-mymenu" class="selected"><a href="/users/'. $cvid .'"><span class="icon-container ';
+	$html2 = '<li id="global-menu-mymenu" class="selected"><a href="/users/'. $cvid .'"><span class="icon-container '.print_badge($cvid).'"><img src="'.$pfp.'"></span><span>User Page</span></a></li>';
 	} else {
-	$html2 = '<li id="global-menu-mymenu"><a href="/users/'. $cvid .'"><span class="icon-container ';
+	$html2 = '<li id="global-menu-mymenu"><a href="/users/'. $cvid .'"><span class="icon-container '.print_badge($cvid).'"><img src="'.$pfp.'"></span><span>User Page</span></a></li>';
 	}
 	} else {
-	$html2 = '<li id="global-menu-mymenu"><a href="/users/'. $cvid .'"><span class="icon-container ';
+	$html2 = '<li id="global-menu-mymenu"><a href="/users/'. $cvid .'"><span class="icon-container '.print_badge($cvid).'"><img src="'.$pfp.'"></span><span>User Page</span></a></li>';
 	}
 
   if($page == 'feed') {
@@ -43,10 +44,6 @@ function form_top_bar($cvid, $nickname, $pfp, $page) {
   } else {
     $activity = '<li id="global-menu-feed"><a href="/feed" class="symbol"><span>Activity Feed</span></a></li>';
   }
-
-				 if($user['user_type'] > 2) {$html3 = 'official-user"><img src="'.$pfp.'"></span><span>User Page</span></a></li>';} else {
-					$html3 = '"><img src="'.$pfp.'"></span><span>User Page</span></a></li>';
-				}
 
 			if($page == 'communities') {
 	$html4 = '<li id="global-menu-community" class="selected"><a href="/" class="symbol"><span>Communities</span></a></li>';
@@ -67,17 +64,23 @@ function form_top_bar($cvid, $nickname, $pfp, $page) {
 	<li><a class="symbol my-menu-info" href="/changelog"><span>Ciiverse Changelog</span></a></li>
   <li><a href="/rules" class="symbol my-menu-guide"><span>Ciiverse Rules</span></a></li>
 	'.($user['user_level'] > 0 ? '<li><a class="symbol my-menu-miiverse-setting" href="/admin_panel.php"><span>Admin Panel</span></a></li>' : '').'
+  '.($user['has_db_access'] == 1 ? '<li><a class="symbol my-menu-miiverse-setting" href="/database"><span>Staff Panel</span></a></li>' : '').'
 	<li><a href="/login/logout.php?csrftoken='.$_COOKIE['csrf_token'].'" class="symbol my-menu-guide"><span>Log Out</span></a></li>
 	</menu>';
 	$html7 = '</li>';
 
-	$finals = "$html1 $html2 $html3 $activity $html4 $html5 $html6 $html7";
+	$finals = "$html1 $html2 $activity $html4 $html5 $html6 $html7";
 
 	return $finals;
 }
 
 function ftbnli($page) {
 	#This is for when you're not logged in.
+  /* <li id="global-menu-login">
+<a href="/login/" class="login">
+<input type="image" alt="Sign in" src="/s/img/sign-in.png">
+</a>
+</li> */
 
   $html1 = '<menu id="global-menu">
   <li id="global-menu-logo"><h1><a href="/"><img src="/img/ciiverse.png" alt="Miiverse" width="165" height="30"></a></h1></li>';
@@ -123,7 +126,7 @@ function form_post_thingy() {
   global $row;
   global $user;
         echo '
-        <form method="post" id="post-form" action="/post.php">
+        <form method="post" id="post-form" action="/post.php" enctype="multipart/form-data">
         <div class="feeling-selector js-feeling-selector test-feeling-selector" style="display: none;"><label class="symbol feeling-button feeling-button-normal checked"><input type="radio" name="feeling_id" value="0" checked=""><span class="symbol-label">normal</span></label><label class="symbol feeling-button feeling-button-happy"><input type="radio" name="feeling_id" value="1"><span class="symbol-label">happy</span></label><label class="symbol feeling-button feeling-button-like"><input type="radio" name="feeling_id" value="2"><span class="symbol-label">like</span></label><label class="symbol feeling-button feeling-button-surprised"><input type="radio" name="feeling_id" value="3"><span class="symbol-label">surprised</span></label><label class="symbol feeling-button feeling-button-frustrated"><input type="radio" name="feeling_id" value="4"><span class="symbol-label">frustrated</span></label><label class="symbol feeling-button feeling-button-puzzled"><input type="radio" name="feeling_id" value="5"><span class="symbol-label">puzzled</span></label></div>
           <input type="hidden" name="communityid" value="'.$cid.'">
           <input type="hidden" name="csrf_token" value="'.$_COOKIE['csrf_token'].'">
@@ -131,8 +134,10 @@ function form_post_thingy() {
     <textarea name="makepost" class="textarea-text textarea" maxlength="1000" placeholder="Share your thoughts in a post to '.$row['community_name'].' Community"></textarea>
   </div>
   <div id="url-stuff" style="display: none;" align="center">
-  '.($user['can_post_images'] == 1 ? '<input type="text" class="textarea" style="cursor: auto; height: auto;" placeholder="Screenshot URL" name="screenshot" maxlength="2000"><br>
-    ' : '').'
+  '.($user['can_post_images'] == 1 ? '<label class="file-button-container">
+<span class="input-label">File upload <span>PNG, JPG, BMP, and GIF are allowed.</span></span>
+<input type="file" class="file-button" name="screenshot" accept="image/*">
+</label>' : '').'
   <input type="text" class="textarea" style="cursor: auto; height: auto;" placeholder="URL/Youtube video" name="url" maxlength="2000"></div>
   <div class="form-buttons" style="display: none;">
     <input type="submit" class="black-button post-button" value="Send" name="create-post">
@@ -163,11 +168,13 @@ function humanTiming($time) {
       }elseif($type == 3) {
       echo '<span class="user-organization">Admin</span>';
       }elseif($type == 4) {
-      echo '<span class="user-organization">The person who created this terrible Miiverse clone.</span>';
+      echo '<span class="user-organization">The person who made Ciiverse.</span>';
       }elseif($type == 5) {
       echo '<span class="user-organization">Donator</span>';
       }elseif($type == 6) {
       echo '<span class="user-organization">It\'s hip to be Pip.</span>';
+      }elseif($type == 7) {
+      echo '<span class="user-organization">Staff</span>';
       }
  }
 
@@ -214,8 +221,8 @@ function humanTiming($time) {
     echo '<div id="footer">
         <div id="footer-inner">
           <div class="link-container">
-            <p id="copyright"><a href="https://discord.gg/69kfXvU">Official Ciiverse discord server.</a></p>            
-            <p id="copyright"><a href="http://miiverse.nintendo.net">All credit goes to nintendo for making Miiverse.</a></p>
+            <p id="copyright"><a href="https://github.com/SRGNation/Ciiverse">Ciiverse source code on GitHub.</a></p>            
+            <p id="copyright"><a href="http://nintendo.com">Ciiverse is a fan recreation of Miiverse by Nintendo and Hatena. I am not affiliated with these companies and they deserve your business.</a></p>
           </div>
         </div>
       </div>';
@@ -254,10 +261,8 @@ function humanTiming($time) {
   }
 
   function post_to_discord($post) {
-    global $discord_webhook;
-
     $content = array("content" => $post);
-    $curl = curl_init($discord_webhook);
+    $curl = curl_init(DISCORD_WEBHOOK);
     curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
     curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($content));
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -322,14 +327,14 @@ function humanTiming($time) {
         }
 
               echo '
-              <div id="post"  data-href="/post/'.$post['post_id'].'" class="post post-subtype-default trigger" tabindex="0">';
+              <div id="post"  data-href="/post/'.$post['post_id'].'" class="post post-subtype-default trigger '.($show_community > 1 ? 'post-list-outline' : '').'" tabindex="0">';
 
-              if($show_community == 1) { 
+              if($show_community > 0) { 
               echo '<p class="community-container">
 <a class="test-community-link" href="/communities/'.$post['community_id'].'"><img src="'.community_info($post['community_id'],'icon').'" class="community-icon">'.community_info($post['community_id'],'name').' Community</a></p>';
 }
 
- echo '<a href="/users/'.$post['owner'].'" class="icon-container '; if($users['user_type'] > 2) { echo 'official-user'; } echo '"><img src="' . htmlspecialchars(user_pfp($post['owner'],$post['feeling'])) . '" class="icon"></a>
+ echo '<a href="/users/'.$post['owner'].'" class="icon-container '.print_badge($post['owner']).'"><img src="' . htmlspecialchars(user_pfp($post['owner'],$post['feeling'])) . '" class="icon"></a>
   <p class="user-name"><a href="/users/'.$post['owner'].'">' . htmlspecialchars($users['nickname']) . '</a></p>
   <div class="timestamp-container"><span class="timestamp">'.humanTiming(strtotime($post['date_time'])).'</span></div>
   <div class="body">
@@ -356,5 +361,65 @@ echo '</div>
 </div>';
 
   }
+
+  function print_badge($user_dude) {
+
+    global $db;
+
+    $get_user_type = $db->query("SELECT user_type FROM users WHERE ciiverseid = '$user_dude'");
+    $users = mysqli_fetch_array($get_user_type);
+
+    if($users['user_type'] == 2) {
+      return 'official-mod';
+    }elseif($users['user_type'] == 3) {
+      return 'official-admin';
+    }elseif($users['user_type'] == 4) {
+      return 'official-developer';
+    }elseif($users['user_type'] == 5) {
+      return 'official-user';
+    }elseif($users['user_type'] == 6) {
+      return 'official-pip';
+    }elseif($users['user_type'] == 7) {
+      return 'official-staff';
+    } else {
+      return '';
+    }
+
+  }
+
+function uploadImage($filename) {
+  $handle = fopen($filename, "r");
+  $data = fread($handle, filesize($filename));
+  if(!empty(CLOUDINARY_NAME))
+  {
+    $pvars = array('file' => (exif_imagetype($filename) == 1 ? 'data:image/gif;base64,' : (exif_imagetype($filename) == 2 ? 'data:image/jpg;base64,' : (exif_imagetype($filename) == 3 ? 'data:image/png;base64,' : (exif_imagetype($filename) == 6 ? 'data:image/bmp;base64,' : '')))) . (isset($resized) ? base64_encode($resized) : base64_encode($data)),
+      'api_key' => CLOUDINARY_KEY,
+      'upload_preset' => CLOUDINARY_PRESET);
+    $timeout = 30;
+    $curl = curl_init();
+    curl_setopt($curl, CURLOPT_URL, 'https://api.cloudinary.com/v1_1/'. CLOUDINARY_NAME .'/auto/upload');
+  }
+  else
+  {
+    $pvars = array('file' => (exif_imagetype($filename) == 1 ? 'data:image/gif;base64,' : (exif_imagetype($filename) == 2 ? 'data:image/jpg;base64,' : (exif_imagetype($filename) == 3 ? 'data:image/png;base64,' : (exif_imagetype($filename) == 6 ? 'data:image/bmp;base64,' : '')))) . (isset($resized) ? base64_encode($resized) : base64_encode($data)),
+        'upload_preset' => 'reverb-mobile');
+    $timeout = 30;
+    $curl = curl_init();
+    curl_setopt($curl, CURLOPT_URL, 'https://api.cloudinary.com/v1_1/reverb/auto/upload');
+  }
+  curl_setopt($curl, CURLOPT_TIMEOUT, $timeout);
+  curl_setopt($curl, CURLOPT_POST, 1);
+  curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($curl, CURLOPT_POSTFIELDS, $pvars);
+  $out = curl_exec($curl);
+  curl_close($curl);
+  $pms = json_decode($out, true);
+
+  if (@$image=$pms['secure_url']) {
+    return $image;
+  } else {
+    return 1;
+  }
+}
 
 ?>

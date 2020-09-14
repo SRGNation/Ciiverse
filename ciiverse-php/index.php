@@ -22,7 +22,7 @@ if(isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
 <head>
 <?php 
 
-formHeaders('Community list - Ciiverse');
+formHeaders('Communities - Ciiverse');
 
 ?>
 </head>
@@ -146,6 +146,5 @@ echo '<li class="read-more">
       </div>
     </div> 
         </div>
-
 </body>
 </html>

@@ -1,14 +1,16 @@
 <?php 
-Require('../lib/frick.php');
+Require('../lib/connect.php');
 session_start();
+
+if(isset($_COOKIE['login_magic'])) {
+    exit("You're already logged in pp head.");
+}
 
 if($_SERVER["REQUEST_METHOD"] == "POST") {
 $ciiverseid = $_POST['ciiverseid'];
 $password = $_POST['password'];
 
-$password = hash('sha512', $password);
-
-$sql = "SELECT user_token, user_type FROM users WHERE ciiverseid = '".mysqli_real_escape_string($db,$ciiverseid)."' AND password = '".mysqli_real_escape_string($db,$password)."' ";
+$sql = "SELECT user_type FROM users WHERE ciiverseid = '".mysqli_real_escape_string($db,$ciiverseid)."'";
 $result = mysqli_query($db,$sql);
 $row = mysqli_fetch_array($result);
 
@@ -16,16 +18,61 @@ $count = mysqli_num_rows($result);
 
       if($count == 1) {
 
-        if($row['user_type'] == 0) {
+        $find_password = $db->query("SELECT password FROM users WHERE ciiverseid = '".mysqli_real_escape_string($db,$ciiverseid)."'");
+        $user_pass = mysqli_fetch_array($find_password);
+
+        if(!password_verify($_POST['password'], $user_pass['password'])) {
+
+            $sha512_pass = hash('sha512', $_POST['password']);
+
+            if($user_pass['password'] !== $sha512_pass) {
+                $err = 'Password doesn\'t match.';
+            } else {
+                $new_pass = password_hash($password, PASSWORD_DEFAULT);
+                $db->query("UPDATE users SET password = '$new_pass' WHERE ciiverseid = '".mysqli_real_escape_string($db,$ciiverseid)."'");
+            }
+        }
+
+        if($row['user_type'] < 1) {
             $err = 'This user has been disabled.';
         }
 
         if(!isset($err)) {
-        header("location: /login/login.php?token=".$row['user_token']);
+        //header("location: /login/login.php?token=".$row['user_token']);
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $randstring = '';
+        for ($i = 0; $i < 60; $i++) {
+            $randstring .= $characters[rand(0, $charactersLength - 1)];
+        }
+            
+        $token = $randstring;
+        $token_hash = hash('sha512', $token);
+
+        $db->query("INSERT INTO sessions (token, owner, ip) VALUES ('$token_hash', '$ciiverseid', '".$_SERVER['REMOTE_ADDR']."')");
+        $db->query("UPDATE users SET ip = '".$_SERVER['REMOTE_ADDR']."' WHERE ciiverseid = '$ciiverseid'");
+
+        $_SESSION['loggedin'] = true;
+        $_SESSION['ciiverseid'] = $ciiverseid;
+        $_SESSION['pfp'] = null;
+        $_SESSION['nickname'] = null;
+        setcookie('login_magic', $token, time() + (86400 * 90), '/');
+
+        $csrf = "";
+        $characters = array_merge(range('A','Z'), range('a','z'), range('0','9'));
+        $max = count($characters) - 1;
+        for ($i = 0; $i < 32; $i++) {
+            $rand = mt_rand(0, $max);
+            $csrf .= $characters[$rand];
+        }
+
+        setcookie('csrf_token', $csrf, time() + (86400 * 90), '/');
+        header("location: /");
+
         }
 
          } else {
-        $err = 'Ciiverse ID or password is incorrect.';
+        $err = 'That user doesn\'t exist.';
       }
 
 }

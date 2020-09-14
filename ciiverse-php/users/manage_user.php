@@ -26,7 +26,7 @@ if($row['user_level'] >= $user['user_level']) {
   exit('An error occured.');
 }
 
-$posts = $db->query("SELECT * FROM posts WHERE owner = '".$_SESSION['ciiverseid']."' AND deleted != 1 AND deleted != 5 ORDER BY post_id DESC");
+$posts = $db->query("SELECT * FROM posts WHERE owner = '".$_SESSION['ciiverseid']."' AND deleted = 0 ORDER BY post_id DESC");
 
 $comments = $db->query("SELECT * FROM comments WHERE owner = '".$_SESSION['ciiverseid']."' ORDER BY id DESC");
 
@@ -85,7 +85,7 @@ $userid = $_SESSION['ciiverseid'];
       
     <div id="sidebar-profile-body" class="without-profile-post-image">
 
-      <div class="icon-container <?php if($user['user_type'] > 2) {echo "official-user";} ?>">
+      <div class="icon-container <?php echo print_badge($_SESSION['ciiverseid']); ?>">
         <a href="/users/<?php echo $_SESSION['ciiverseid']; ?>">
           <img src="<?php echo user_pfp($_SESSION['ciiverseid'],0); ?>" class="icon">
         </a>

@@ -13,6 +13,10 @@ $post_id = mysqli_real_escape_string($db,$_POST['post']);
 $type = mysqli_real_escape_string($db,$_POST['yeahType']);
 $remove = mysqli_real_escape_string($db,$_POST['remove']);
 
+if($post_id == 2511) {
+	exit('error');
+}
+
 if($type == 'post') {
 $post_info = $db->query("SELECT * FROM posts WHERE post_id = $post_id AND deleted = 0");
 } else {
@@ -24,6 +28,10 @@ if(mysqli_num_rows($post_info) == 0) {
 }
 
 if(isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {} else {
+	exit("error");
+}
+
+if($_SESSION['ciiverseid'] == 'fuck_001') {
 	exit("error");
 }
 

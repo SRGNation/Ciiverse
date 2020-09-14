@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 31, 2018 at 09:47 PM
+-- Generation Time: Sep 13, 2020 at 04:39 PM
 -- Server version: 10.1.29-MariaDB
 -- PHP Version: 7.2.0
 
@@ -19,7 +19,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `ciiverse`
+-- Database: `new_indigo-php`
 --
 
 -- --------------------------------------------------------
@@ -47,7 +47,6 @@ CREATE TABLE `comments` (
   `post_id` int(11) NOT NULL,
   `content` text NOT NULL,
   `owner` varchar(32) NOT NULL,
-  `yeahs` int(11) NOT NULL,
   `feeling` int(4) NOT NULL,
   `date_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `ip` varchar(64) NOT NULL
@@ -134,6 +133,34 @@ CREATE TABLE `posts` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `profile_tags`
+--
+
+CREATE TABLE `profile_tags` (
+  `id` int(11) NOT NULL,
+  `tag_name` varchar(16) NOT NULL,
+  `tag_content` varchar(64) NOT NULL,
+  `owner` varchar(32) NOT NULL,
+  `date_created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `sessions`
+--
+
+CREATE TABLE `sessions` (
+  `id` int(11) NOT NULL,
+  `token` varchar(200) NOT NULL,
+  `date_created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `owner` varchar(32) NOT NULL,
+  `ip` varchar(64) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `users`
 --
 
@@ -143,14 +170,16 @@ CREATE TABLE `users` (
   `nickname` varchar(32) NOT NULL,
   `prof_desc` text NOT NULL,
   `password` varchar(128) NOT NULL,
-  `user_token` varchar(260) NOT NULL,
   `pfp` varchar(2000) NOT NULL,
   `nnid` varchar(16) DEFAULT NULL,
   `mii_hash` varchar(32) DEFAULT NULL,
   `pfp_type` int(1) NOT NULL,
   `user_type` int(1) NOT NULL,
   `can_post_images` int(1) NOT NULL,
+  `favorite_post` int(11) DEFAULT NULL,
   `hates_yeah_notifs` tinyint(1) NOT NULL,
+  `hide_replies` tinyint(1) NOT NULL,
+  `hide_yeahs` tinyint(1) NOT NULL,
   `has_db_access` tinyint(1) NOT NULL,
   `user_level` int(11) NOT NULL,
   `ip` varchar(64) NOT NULL
@@ -216,6 +245,18 @@ ALTER TABLE `posts`
   ADD PRIMARY KEY (`post_id`);
 
 --
+-- Indexes for table `profile_tags`
+--
+ALTER TABLE `profile_tags`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `sessions`
+--
+ALTER TABLE `sessions`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
@@ -266,6 +307,18 @@ ALTER TABLE `notifs`
 --
 ALTER TABLE `posts`
   MODIFY `post_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `profile_tags`
+--
+ALTER TABLE `profile_tags`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `sessions`
+--
+ALTER TABLE `sessions`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `users`

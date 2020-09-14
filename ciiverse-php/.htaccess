@@ -6,6 +6,9 @@ RewriteRule ^users/([A-Za-z0-9_-]+)$ profile.php?ciiverseid=$1&page=1 [QSA,L]
 RewriteRule ^communities/([0-9]+)$ communities.php?cid=$1
 RewriteRule ^changelog$ communities.php?cid=55
 RewriteRule ^post/([0-9]+)$ posts.php?pid=$1
+RewriteRule ^unfavorite_post$ unfavorite_post.php
+RewriteRule ^favorite_post$ favorite_post.php
+RewriteRule ^tag/create$ create_tag.php
 RewriteRule ^notifications$ notifications.php
 RewriteRule ^delete_post/([0-9]+)$ delete_post.php?pid=$1
 RewriteRule ^edit/profile$ users/edit_profile.php
@@ -14,8 +17,17 @@ RewriteRule ^users/([A-Za-z0-9_-]+)/replies$ profile.php?ciiverseid=$1&page=3 [Q
 RewriteRule ^users/([A-Za-z0-9_-]+)/deleted$ profile.php?ciiverseid=$1&page=4 [QSA,L]
 RewriteRule ^users/([A-Za-z0-9_-]+)/followers$ profile.php?ciiverseid=$1&page=5 [QSA,L]
 RewriteRule ^users/([A-Za-z0-9_-]+)/following$ profile.php?ciiverseid=$1&page=6 [QSA,L]
+RewriteRule ^users/([A-Za-z0-9_-]+)/favorites$ favorites.php?user=$1 [QSA,L]
 RewriteRule ^communities/favorites$ favorites.php
 RewriteRule ^feed$ activity_feed.php
 RewriteRule ^rules$ rules.php
+RewriteRule ^check_update.json$ check_notifs.php
+RewriteRule ^userdata/list$ userdata_list.php
+RewriteRule ^userdata/([0-9]+)/delete$ remove_tag.php?id=$1
 
 php_value date.timezone "America/New_York"
+
+<Files 403.shtml>
+order allow,deny
+allow from all
+</Files>

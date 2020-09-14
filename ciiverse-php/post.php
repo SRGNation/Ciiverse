@@ -6,6 +6,10 @@ require('lib/connect.php');
 require('lib/users.php');
 include('lib/htm.php');
 
+if(isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) { } else {
+	$err = "You are not logged in. You need to log in to post.";
+}
+
 if(account_deleted($_SESSION['ciiverseid'])) {
 	$err = "An error occured. Please try logging back in and try again.";
 }
@@ -13,12 +17,12 @@ if(account_deleted($_SESSION['ciiverseid'])) {
 if($_SERVER["REQUEST_METHOD"] == "POST") {
 
 if($_POST['csrf_token'] !== $_COOKIE['csrf_token']) {
-	exit();
+	$err = "CSRF check failed.";
 }
 
 $ip = $_SERVER['REMOTE_ADDR'];
 
-$a = "SELECT * FROM communities WHERE id = ".$_POST['communityid']." AND deleted = 0";
+$a = "SELECT * FROM communities WHERE id = ".mysqli_real_escape_string($db,$_POST['communityid'])." AND deleted = 0";
 $b = mysqli_query($db,$a);
 $d = mysqli_fetch_array($b);
 
@@ -51,26 +55,46 @@ if (strlen($_POST['makepost']) > 0 && strlen(trim($_POST['makepost'])) == 0) {
 $content = mysqli_real_escape_string($db,$_POST['makepost']);
 $cid = mysqli_real_escape_string($db,$_POST['communityid']);
 $cvid = mysqli_real_escape_string($db,$_SESSION['ciiverseid']);
-$screenshot = mysqli_real_escape_string($db,$_POST['screenshot']);
+//$screenshot = mysqli_real_escape_string($db,$_POST['screenshot']);
 $feeling = mysqli_real_escape_string($db,$_POST['feeling_id']);
 $url = mysqli_real_escape_string($db,$_POST['url']);
-
-if(isset($_POST['screenshot']) && $user['can_post_images'] == 0) {
-	$err = "You don't have the permission to post images.";
-}
 
 $normie = 'HAHAHAAHAHAHA NORM1e LOOK AT MEME IM SO FUNNY LOololololololololololololololololololololololololhguishaoigugheuwnqg.';
 
 $content = str_replace('normie', $normie, $content);
 
-if(!empty($screenshot)) {
-	if(!urlimageisvalid($screenshot)) {
-		$err = 'Invalid Image';
+$stmt = $db->prepare('SELECT COUNT(*) FROM posts WHERE owner = ? AND date_time > NOW() - INTERVAL 15 SECOND');
+$stmt->bind_param('s', $_SESSION['ciiverseid']);
+$stmt->execute();
+$result = $stmt->get_result();
+$row = $result->fetch_assoc();
+if($row['COUNT(*)'] > 0) {
+    $err = 'You\'re making too many posts in quick succession. Please try again in a moment.';
+}
+
+if(isset($_FILES['screenshot'])) { 
+	$img = $_FILES['screenshot'];
+} else {
+	$img = null;
+}
+
+if(!empty($img['name'])) {
+	if($user['can_post_images'] == 1) {
+		$filename = $img['tmp_name'];
+		
+		$image = uploadImage($filename);
+		if ($image == 1) {
+			$err = 'Image upload failed.';
+		}
+	} else {
+		$err = 'You don\'t have the permission to post images.';
 	}
+} else {
+	$image = null;
 }
 
 if(!isset($err)) {
-$sql_post = "INSERT INTO posts (community_id, content, owner, ip, screenshot, web_url, feeling) VALUES ('$cid', '$content', '$cvid', '$ip', '$screenshot', '$url', '$feeling')";
+$sql_post = "INSERT INTO posts (community_id, content, owner, ip, screenshot, web_url, feeling) VALUES ('$cid', '$content', '$cvid', '$ip', '$image', '$url', '$feeling')";
 mysqli_query($db,$sql_post);
 
 /* if($d['rd_oly'] == 'true') {
@@ -84,14 +108,19 @@ mysqli_query($db,$sql_post);
 	(Full post at: http://srgciiverse.x10host.com/post/$postid)");
 } */
 } else {
-	echo "<script type='text/javascript'> alert(\"".$err."\"); </script> 
-	<p>Redirecting...</p>
+	exit("<script type='text/javascript'> alert(\"".$err."\"); </script>"); 
+	/* <p>Redirecting...</p>
 	<meta http-equiv=\"refresh\" content=\"2;url=/communities/$cid\" />";
-	exit();
+	exit(); */
 }
 
-header("location: ../communities/$cid");
+//header("location: ../communities/$cid");
+$get_post = $db->query("SELECT * FROM posts WHERE owner = '".$_SESSION['ciiverseid']."' ORDER BY post_id DESC LIMIT 1");
+$post = mysqli_fetch_array($get_post);
 
-} else { exit("Your gay lol."); }
+printPost($post['post_id'],0);
+
+
+} else { exit("Your str*ight lol."); }
 
 ?>

@@ -1,19 +1,32 @@
 <?php
 
-$redirect = '/communities/favorites';
 session_start();
 require("lib/connect.php");
 include("lib/htm.php");
 include("lib/users.php");
 
-$favorites = $db->query("SELECT * FROM favorite_communities WHERE owner = '".$_SESSION['ciiverseid']."' ORDER BY id DESC");
+if(!isset($_GET['user'])) {
+  $favorites = $db->query("SELECT * FROM favorite_communities WHERE owner = '".$_SESSION['ciiverseid']."' ORDER BY id DESC");  
+} else {
+  $favorites = $db->query("SELECT * FROM favorite_communities WHERE owner = '".mysqli_real_escape_string($db,$_GET['user'])."' ORDER BY id DESC");
+}
+
 $fav_count = mysqli_num_rows($favorites);
 
-$posts = $db->query("SELECT * FROM posts WHERE owner = '".$_SESSION['ciiverseid']."' AND deleted < 1 ORDER BY post_id DESC");
+#Check if user exists or something I DON'T KNWO
+if(isset($_GET['user'])) {
+  $user_check = $db->query("SELECT * FROM users WHERE ciiverseid = '".mysqli_real_escape_string($db,$_GET['user'])."'");
+  $johnnyjohnny = mysqli_fetch_array($user_check);
 
+  if(mysqli_num_rows($user_check) == 0) {
+    exit("user doesn't exist");
+  }
+}
+
+$posts = $db->query("SELECT * FROM posts WHERE owner = '".$_SESSION['ciiverseid']."' AND deleted = 0 ORDER BY post_id DESC");
 $comments = $db->query("SELECT * FROM comments WHERE owner = '".$_SESSION['ciiverseid']."' ORDER BY id DESC");
-
 $yeahs = $db->query("SELECT * FROM yeahs WHERE owner = '".$_SESSION['ciiverseid']."' ORDER BY yeah_id DESC");
+$profile_tags = $db->query("SELECT * FROM profile_tags WHERE owner = '".$_SESSION['ciiverseid']."' ORDER BY id ASC");
 
 $post_count = mysqli_num_rows($posts);
 $reply_count = mysqli_num_rows($comments);
@@ -43,7 +56,7 @@ $yeah_count = mysqli_num_rows($yeahs);
       
     <div id="sidebar-profile-body" class="without-profile-post-image">
 
-      <div class="icon-container <?php if($user['user_type'] > 2) {echo "official-user";} ?>">
+      <div class="icon-container <?php echo print_badge($_SESSION['ciiverseid']); ?>">
         <a href="/users/<?php echo $_SESSION['ciiverseid']; ?>">
           <img src="<?php echo user_pfp($_SESSION['ciiverseid'],0); ?>" class="icon">
         </a>
@@ -93,6 +106,18 @@ $yeah_count = mysqli_num_rows($yeahs);
         <div class="user-main-profile data-content">
 <h4><span>NNID</span></h4>
 <div class="note"><?php if(!empty($user['nnid'])){echo $user['nnid'];}else{echo 'Not set.';} ?></div>
+<?php 
+
+  while($tags = mysqli_fetch_array($profile_tags)) {
+
+    echo '<div class="user-main-profile data-content">
+      <h4><span>'.$tags['tag_name'].'</span></h4>
+      <div class="note">'.$tags['tag_content'].'</div>
+    </div>';
+
+  } 
+
+        ?>
 </div>
 <div class="game-skill data-content">
   <!-- Nothings here lol. -->
@@ -101,9 +126,24 @@ $yeah_count = mysqli_num_rows($yeahs);
   </div>
  	</div>
  	 <div class="main-column"><div class="post-list-outline">
-  <h2 class="label">Your Favorite Communities</h2>
+  <h2 class="label"><?php 
+  if(!isset($_GET['user'])) {
+    echo "Your";
+  } else {
+    echo $johnnyjohnny['nickname'].'\'s';
+  }
+  ?> Favorite Communities</h2>
   <?php
-  if($fav_count == 0) { echo "You have no favorite communities."; } else {
+  if($fav_count == 0) { 
+
+    if(!isset($_GET['user'])) {
+      echo "You have no favorite communities."; 
+    } else {
+      echo $johnnyjohnny['nickname']." has no favorite communities";
+    }
+
+  } else {
+
   	while($favorite = mysqli_fetch_array($favorites)) {
   echo '<ul class="list community-list">
   	<li class="trigger" data-href="/communities/'.$favorite['community_id'].'">

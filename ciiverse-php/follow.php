@@ -25,6 +25,7 @@ if($type == 'follow') {
 	}
 
 	$db->query("INSERT INTO follows (follow_to, follow_by) VALUES ('".$user_following."', '".$_SESSION['ciiverseid']."')");
+	$db->query("INSERT INTO notifs (notif_to, notif_by, type) VALUES ('".$user_following."', '".$_SESSION['ciiverseid']."', 3)");
 } else {
 	$chk = $db->query("SELECT * FROM follows WHERE follow_to = '$user_following' AND follow_by = '".$_SESSION['ciiverseid']."'");
 	$is_already = mysqli_num_rows($chk);

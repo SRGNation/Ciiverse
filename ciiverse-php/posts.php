@@ -29,11 +29,12 @@ $res3 = mysqli_query($db,$sql3);
 $row3 = mysqli_fetch_array($res3);
 
 #These are to get the comments.
-$sql4 = "SELECT comments.id, comments.post_id, comments.yeahs, comments.content, comments.owner, users.pfp, users.nickname, users.user_type, comments.date_time, comments.feeling FROM comments, users WHERE comments.post_id = '$pid' AND users.ciiverseid = comments.owner ORDER BY id ASC";
+$sql4 = "SELECT comments.id, comments.post_id, comments.content, comments.owner, users.pfp, users.nickname, users.user_type, comments.date_time, comments.feeling FROM comments, users WHERE comments.post_id = '$pid' AND users.ciiverseid = comments.owner ORDER BY id ASC";
 $res4 = mysqli_query($db,$sql4);
 
 #These are to get the yeahs.
 $aaa = $db->query("SELECT * FROM yeahs WHERE post_id = '$pid' ");
+$get_yeah_data = $db->query("SELECT * FROM yeahs WHERE post_id = '$pid' AND owner != '".$_SESSION['ciiverseid']."' ORDER BY yeah_id DESC limit 30");
 
 $count = mysqli_num_rows($res4);
 $yeah_count = mysqli_num_rows($aaa);
@@ -145,25 +146,31 @@ exit();
 					<div class="post-list-outline">
 						<section class="post post-subtype-default" id="post-content">
 							<header class="community-container">
-    							<h1 class="community-container-heading">
-      								<a href="/communities/<?php echo $row1['community_id']; ?>"><img class="community-icon" src="<?php echo $row3['community_picture']; ?>"><?php echo $row3['community_name']; ?> Community</a>
-    							</h1>
-  							</header>
-                                        <?php 
-  if(isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true && $row1['deleted'] < 1) {
-    if($_SESSION['ciiverseid'] == $row1['owner']) {
-    echo '<button type="button" class="symbol button edit-button rm-post-button" data-modal-open="#edit-post-page">
-<span class="symbol-label">Delete</span></button>';
-  } else {
-    if($user['user_level'] > $row2['user_level']) {
-          echo '<button type="button" class="symbol button edit-button rm-post-button" data-modal-open="#edit-post-page">
-<span class="symbol-label">Delete</span></button>';
-    }
-}
-}
-  ?>
+    						<h1 class="community-container-heading">
+      						<a href="/communities/<?php echo $row1['community_id']; ?>"><img class="community-icon" src="<?php echo $row3['community_picture']; ?>"><?php echo $row3['community_name']; ?> Community</a>
+    						</h1>
+  						</header>
+              <?php 
+                if(isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true && $row1['deleted'] < 1) {
+                  if($_SESSION['ciiverseid'] == $row1['owner'] || $user['user_level'] > $row2['user_level']) {
+                    echo '<button type="button" class="symbol button edit-button rm-post-button" data-modal-open="#remove-post-page"><span class="symbol-label">Delete</span></button>';
+                  }
+                  if(!empty($row1['screenshot']))
+                  {
+                    if($user['favorite_post'] == $pid)
+                    {
+                      echo '<button type="button" class="symbol button edit-button profile-post-button done" data-modal-open="#profile-post-remove"><span class="symbol-label">Remove favorite post</span></button>';
+                    }
+                    else
+                    {
+                      echo '<button type="button" class="symbol button edit-button profile-post-button" data-modal-open="#profile-post-page"><span class="symbol-label">Favorite post</span></button>';         
+                    }
+
+                  }
+                }
+              ?>
   							<div class="user-content">
-    							<a class="icon-container <?php if($row2['user_type'] > 2) { echo "official-user"; } ?>" href="/users/<?php echo $row1['owner']; ?>"><img class="icon" src="<?php echo htmlspecialchars(user_pfp($row1['owner'],$row1['feeling'])); ?>"></a>
+    							<a class="icon-container <?php echo print_badge($row1['owner']); ?>" href="/users/<?php echo $row1['owner']; ?>"><img class="icon" src="<?php echo htmlspecialchars(user_pfp($row1['owner'],$row1['feeling'])); ?>"></a>
     							<div class="user-name-content">
       								<p class="user-name"><a href="/users/<?php echo $row1['owner']; ?>"><?php echo $row2['nickname']; ?></a><span class="user-id"><?php echo $row1['owner']; ?></span></p>
       								<p class="timestamp-container">
@@ -220,39 +227,39 @@ exit();
                       <div class="reply symbol"><span class="symbol-label">Comments</span><span class="reply-count"><?php echo $count; ?></span></div></div>
 </section>
 <?php if($yeah_count > 0) { 
-echo '<div id="empathy-content">
-<a href="/users/'.$_SESSION['ciiverseid'].'" class="post-permalink-feeling-icon" style="display: none;"><img src="'.user_pfp($_SESSION['ciiverseid'],0).'" class="user-icon"></a>
-</div>';
+echo '<div id="empathy-content">';
+
+if($_SESSION['loggedin']) {
+  echo '<a href="/users/'.$_SESSION['ciiverseid'].'" class="post-permalink-feeling-icon visitor'.($user['user_type'] > 2 ? 'official-user' : '').'" '.($yeah_cnt == 0 ? 'style="display: none;"' : '').'><img src="'.user_pfp($_SESSION['ciiverseid'],$row1['feeling']).'" class="user-icon"></a>';
+}
+
+  while($yeah_data = mysqli_fetch_array($get_yeah_data)) {
+
+    $get_owner_data = $db->query("SELECT * FROM users WHERE ciiverseid = '".$yeah_data['owner']."'");
+    $owner_data = mysqli_fetch_array($get_owner_data);
+
+    echo '<a href="/users/'.$yeah_data['owner'].'" class="post-permalink-feeling-icon visitor'.($owner_data['user_type'] > 2 ? 'official-user' : '').'">
+<img src="'.user_pfp($yeah_data['owner'],$row1['feeling']).'" class="user-icon"></a>';
+
+  }
+
+echo '</div>
+<br>';
 } ?>
 <div id="reply-content">
   <h2 class="reply-label">Comments</h2>
   	 <ul class="list reply-list test-reply-list">
   <?php if($count !== 0) { while($row = mysqli_fetch_array($res4)):
-
     $check_yeahed = $db->query("SELECT * FROM yeahs WHERE post_id = ".$row['id']." AND type = 'comment' AND owner = '".$_SESSION['ciiverseid']."'");
     $yeahed = mysqli_num_rows($check_yeahed);
 
-   echo '
-<li class="post '.($row['owner'] == $row1['owner'] ? 'my' : 'other').' trigger">
-  <a class="icon-container '; if($row['user_type'] > 2) { 
-  	echo 'official-user';
-  } echo '" href="/users/'.$row['owner'].'"><img class="icon" src="'.htmlspecialchars(user_pfp($row['owner'],$row['feeling'])).'"></a>
-  <div class="body">
-    <div class="header">
-      <p class="user-name"><a href="/users/'.$row['owner'].'">'.htmlspecialchars($row['nickname']).'</a></p>
-      <p class="timestamp-container">
-        <a class="timestamp">'.humanTiming(strtotime($row['date_time'])).'</a>
-        <span class="spoiler-status"> ·Spoilers</span>
-      </p>
-    </div>
-    <p class="reply-content-text">'.htmlspecialchars($row['content']).'</p>
-    <div class="reply-meta">
-        <button '.($_SESSION['loggedin'] == false || $row['owner'] == $_SESSION['ciiverseid'] ? 'disabled' : '').' class="symbol submit empathy-button" id="'.$row['id'].'" data-yeah-type="comment" data-remove="'.($yeahed == 1 ? '1' : '0').'" type="button"><span class="empathy-button-text">'.($yeahed == 1 ? 'Unyeah' : print_yeah($row['feeling'])).'</span></button>
-        <div class="empathy symbol"><span class="symbol-label">Yeahs</span><span class="empathy-count">'.$row['yeahs'].'</span></div>
-    </div>
-    </div>';
+    $get_yeahs = $db->query("SELECT yeah_id FROM yeahs WHERE post_id = ".$row['id']." AND type = 'comment'");
+    $yeah_count = mysqli_num_rows($get_yeahs);
+
+    echo '<li class="post '.($row['owner'] == $row1['owner'] ? 'my' : 'other').' trigger"><a class="icon-container '.print_badge($row['owner']).'" href="/users/'.$row['owner'].'"><img class="icon" src="'.htmlspecialchars(user_pfp($row['owner'],$row['feeling'])).'"></a><div class="body">
+    <div class="header"><p class="user-name"><a href="/users/'.$row['owner'].'">'.htmlspecialchars($row['nickname']).'</a></p><p class="timestamp-container"><a class="timestamp">'.humanTiming(strtotime($row['date_time'])).'</a><span class="spoiler-status"> ·Spoilers</span></p></div><p class="reply-content-text">'.htmlspecialchars($row['content']).'</p><div class="reply-meta"><button '.($_SESSION['loggedin'] == false || $row['owner'] == $_SESSION['ciiverseid'] ? 'disabled' : '').' class="symbol submit empathy-button" id="'.$row['id'].'" data-yeah-type="comment" data-remove="'.($yeahed == 1 ? '1' : '0').'" type="button"><span class="empathy-button-text">'.($yeahed == 1 ? 'Unyeah' : print_yeah($row['feeling'])).'</span></button><div class="empathy symbol"><span class="symbol-label">Yeahs</span><span class="empathy-count">'.$yeah_count.'</span></div></div></div>';
     endwhile;
-     } else { echo '<div class="no-reply-content"><div><p>This post has no comments.</p></div></div>'; }
+  } else { echo '<div class="no-reply-content"><div><p>This post has no comments.</p></div></div>'; }
      ?>
     
 </li>
@@ -273,8 +280,37 @@ echo '<div id="empathy-content">
 	echo "<p>You need an account to comment.<br>Don't have one? You can create one <a href='/register'>here.</a></p>";
 }
 	?>
-</div> 
-<div class="dialog none" id="edit-post-page" data-modal-types="edit-post">
+</div>
+<div class="dialog none" id="profile-post-remove" data-modal-types="edit-post" data-is-template="1">
+<div class="dialog-inner">
+  <div class="window">
+    <h1 class="window-title">Remove favorite post</h1>
+    <form class="edit-post-form" action="/unfavorite_post" method="post">
+    <div class="window-body">
+        <p class="window-body-content">Are you sure you want to remove this post from your favorite?</p>
+    <div class="form-buttons">
+          <input class="olv-modal-close-button gray-button" type="button" value="No">
+          <input class="post-button black-button" type="submit" value="Yes">
+    </div></form>
+  </div>
+</div>
+</div>
+<div class="dialog none" id="profile-post-page" data-modal-types="edit-post" data-is-template="1">
+<div class="dialog-inner">
+  <div class="window">
+    <h1 class="window-title">Favorite post</h1>
+    <form class="edit-post-form" action="/favorite_post" method="post">
+    <input type="hidden" maxlength="11" name="id" value="<?=$pid?>">
+    <div class="window-body">
+        <p class="window-body-content">Are you sure you want to favorite this post? <?=(!empty($user['favorite_post']) ? 'This will replace your current favorite post.' : '')?></p>
+    <div class="form-buttons">
+          <input class="olv-modal-close-button gray-button" type="button" value="No">
+          <input class="post-button black-button" type="submit" value="Yes">
+    </div></form>
+  </div>
+</div>
+</div>
+<div class="dialog none" id="remove-post-page" data-modal-types="edit-post" data-is-template="1">
 <div class="dialog-inner">
   <div class="window">
     <h1 class="window-title">Delete Post</h1>
@@ -288,19 +324,6 @@ echo '<div id="empathy-content">
   </div>
 </div>
 </div>
-<div class="dialog none" id="view-embed-link-code" data-is-template="1" data-modal-types="view_embed_link">
-<div class="dialog-inner">
-  <div class="window">
-    <h1 class="window-title">Embed this post on a website.</h1>
-    <div class="window-body">
-      <div class="embed-warn">To embed this post on a website, copy the code below. Note that the design and content of the embedded post may change at any time.</div>
-      <textarea name="body" class="textarea-text textarea" onclick="this.focus(); this.select();" readonly=""></textarea>
-      <input class="olv-modal-close-button gray-button" type="button" value="Close">
-    </div>
-  </div>
-</div>
-</div>
-
 </div>
 <script type="text/javascript">
 	    $(".reply-button").click(function(e){

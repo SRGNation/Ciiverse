@@ -8,7 +8,7 @@ include('lib/users.php');
 
 $cid = mysqli_real_escape_string($db,$_GET['cid']);
 
-$sql = "SELECT community_picture, community_name, comm_desc, community_banner, rd_oly, deleted, type FROM communities WHERE id='$cid' ";
+$sql = "SELECT community_picture, community_name, comm_desc, community_banner, rd_oly, deleted, type FROM communities WHERE id=$cid ";
 $result = mysqli_query($db,$sql);
 $row = mysqli_fetch_array($result);
 
@@ -31,13 +31,21 @@ if($row['deleted'] == 1) {
   exit("This community has been deleted and is no longer available.");
 }
 
-if(!isset($_GET['offset'])) {
-  $limit = 50;
-} else {
-  $limit = (mysqli_real_escape_string($db,$_GET['offset']) * 50);
+if(isset($_GET['offset']) && isset($_GET['date_time'])) {
+  $offset = ($_GET['offset'] * 50);
+  $date_time = mysqli_real_escape_string($db,$_GET['date_time']);
+  $get_posts = $db->query("SELECT post_id FROM posts WHERE community_id = $cid AND deleted = 0 AND date_time < '$date_time' ORDER BY post_id DESC LIMIT 50 offset $offset");
+
+  while($post = mysqli_fetch_array($get_posts)) {
+
+    printPost($post['post_id'],0);
+
+  } 
+
+  exit();
 }
 
-$ansql = "SELECT post_id FROM posts WHERE community_id = $cid AND deleted = 0 ORDER BY post_id DESC limit $limit";
+$ansql = "SELECT post_id FROM posts WHERE community_id = $cid AND deleted = 0 ORDER BY post_id DESC LIMIT 50";
 $aresult = mysqli_query($db,$ansql);
 
 $counting = mysqli_num_rows($aresult);
@@ -47,19 +55,6 @@ if(isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
 $community = $db->query("SELECT * FROM favorite_communities WHERE community_id = '$cid' AND owner = '".$_SESSION['ciiverseid']."' ");
 $favorite = mysqli_num_rows($community);
 }
-
-
-/*
-
-Community Types:
-0. General Community
-1. Announcement Community
-2. Game Community 3DS
-3. Game Community Wii U
-4. Game Community 3DS/Wii U
-
-*/
-
 
 ?>
 
@@ -144,22 +139,15 @@ Community Types:
 <div class="body-content" id="community-post-list">
           <div class="list post-list js-post-list">
 				<?php 
-        if($counting == 0) { echo "There are no posts on this community yet."; } else {
-        while($row = mysqli_fetch_array($aresult)) {
-          printPost($row['post_id'],0);
-}
- }
+        if($counting == 0) {
+            echo '<div class="no-content"><p>There are no posts on this community yet.</p></div>'; 
+        } else {
+            while($row = mysqli_fetch_array($aresult)) {
+                printPost($row['post_id'],0);
+            }
+            echo '<div id="post-load"><center><button id="LMPIC" class="black-button apply-button" commute_id="'.$cid.'" date_time="'.date("Y-m-d H:i:s").' ?>">Load More posts</button></center>';
+        }
   ?>
-  <script type="text/javascript">
-    $(".post-button").click(function(e){
-      $(this).addClass('disabled');
-    });
-
-  </script>
-    <div>
-      <center>
-    <button id="LMPIC" class="black-button apply-button" commute_id="<?php echo $cid; ?>">Load More posts</button>
-      </center>
   </div>
 </div>
 </div>
