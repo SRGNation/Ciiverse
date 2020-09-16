@@ -33,7 +33,7 @@ $sql4 = "SELECT comments.id, comments.post_id, comments.content, comments.owner,
 $res4 = mysqli_query($db,$sql4);
 
 #These are to get the yeahs.
-$aaa = $db->query("SELECT * FROM yeahs WHERE post_id = '$pid' ");
+$aaa = $db->query("SELECT * FROM yeahs WHERE post_id = '$pid' AND type = 'post'");
 $get_yeah_data = $db->query("SELECT * FROM yeahs WHERE post_id = '$pid' AND owner != '".$_SESSION['ciiverseid']."' ORDER BY yeah_id DESC limit 30");
 
 $count = mysqli_num_rows($res4);
@@ -41,7 +41,7 @@ $yeah_count = mysqli_num_rows($aaa);
 
 #This is to see if you already yeahed this post.
 if(isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == 'true') {
-  $check_yeah = $db->query("SELECT * FROM yeahs WHERE post_id = '$pid' AND owner = '".$_SESSION['ciiverseid']."' ");
+  $check_yeah = $db->query("SELECT * FROM yeahs WHERE post_id = '$pid' AND owner = '".$_SESSION['ciiverseid']."' AND type = 'post'");
   $yeah_cnt = mysqli_num_rows($check_yeah);
 } else {
   $yeah_cnt = 0;
