@@ -35,39 +35,7 @@ $ud_count = mysqli_num_rows($userdata);
         ?>
   </div>
   <div id="main-body">
-        <div id="sidebar" class="general-sidebar"><div class="sidebar-container">
-        <?php
-            $stmt = $db->prepare("SELECT post_id, screenshot, owner FROM posts WHERE post_id = ? AND deleted = 0");
-            $stmt->bind_param('i', $user['favorite_post']);
-            $stmt->execute();
-            $result = $stmt->get_result();
-            $fav_post = $result->fetch_assoc();
-
-            if(!empty($fav_post['screenshot'])) { 
-              echo '<a href="/post/'.$fav_post['post_id'].'" id="sidebar-cover" style="background-image:url('.htmlspecialchars($fav_post['screenshot']).')"><img src="'.htmlspecialchars($fav_post['screenshot']).'" class="sidebar-cover-image"></a><div id="sidebar-profile-body" class="with-profile-post-image">';
-            } else {
-              echo '<div id="sidebar-profile-body" class="without-profile-post-image">';
-            }
-          ?>
-<div class="icon-container <?php echo print_badge($_SESSION['ciiverseid']); ?>">
-<a href="/users/<?php echo $_SESSION['ciiverseid']; ?>">
-<img src="<?php echo user_pfp($_SESSION['ciiverseid'],0); ?>" alt="chance" class="icon">
-</a>
-</div>
-<?php printOrganization($user['user_type'],0) ?>
-<a href="/users/<?php echo $_SESSION['ciiverseid']; ?>" class="nick-name"><?php echo $user['nickname']; ?></a>
-<p class="id-name"><?php echo $_SESSION['ciiverseid']; ?></p>
-</div><ul id="sidebar-profile-status">
-<li><a href="/users/<?php echo $_SESSION['ciiverseid']; ?>/following"><span><span class="number"><?php echo $following_count; ?></span>Following</span></a></li>
-<li><a href="/users/<?php echo $_SESSION['ciiverseid']; ?>/followers"><span><span class="number"><?php echo $follower_count; ?></span>Followers</span></a></li>
-</ul>
-</div><div class="sidebar-setting sidebar-container">
-<ul>
-<li><a href="/communities/55" class="sidebar-menu-info symbol"><span>Ciiverse Changelog</span></a></li>
-<li><a href="/rules" class="sidebar-menu-guide symbol"><span>Ciiverse Rules</span></a></li>
-</ul>
-</div>
-</div>
+  <?=userSidebar($_SESSION['ciiverseid'], true, true)?>
 <div class="main-column">
   <div class="post-list-outline">
     <h2 class="label">Profile tags <button type="button" class="button" style="max-width: 50px;padding: 4px 4px 4px;font-size: 12px;margin-right: 0;margin-top: -25px;" data-modal-open="#add-tag-page"><span class="symbol-label">+ Add</span></button></h2>

@@ -36,8 +36,9 @@ $notif_count = mysqli_num_rows($notifs);
 				<?php 
 				echo form_top_bar($_SESSION['ciiverseid'], $_SESSION['nickname'], $_SESSION['pfp'], 'updates');
 				?>
-			</div>			
+			</div>
 			<div id="main-body">
+				<?=userSidebar($_SESSION['ciiverseid'], true, true)?>
 				<div class="main-column messages">
 					<div class="post-list-outline">
 						<h2 class="label">Updates</h2>

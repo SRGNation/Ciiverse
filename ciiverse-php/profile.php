@@ -29,10 +29,6 @@ $deleted = $db->query("SELECT * FROM posts WHERE owner = '$userid' AND deleted !
 $followers = $db->query("SELECT * FROM follows WHERE follow_to = '$userid' ORDER BY id DESC");
 $following = $db->query("SELECT * FROM follows WHERE follow_by = '$userid' ORDER BY id DESC");
 $favorites = $db->query("SELECT * FROM favorite_communities WHERE owner = '$userid' ORDER BY id DESC LIMIT 10");
-$profile_tags = $db->query("SELECT * FROM profile_tags WHERE owner = '$userid' ORDER BY id ASC");
-
-$chk = $db->query("SELECT * FROM follows WHERE follow_to = '$userid' AND follow_by = '".$_SESSION['ciiverseid']."'");
-$following_user = mysqli_num_rows($chk);
 
 $post_count = mysqli_num_rows($posts);
 $reply_count = mysqli_num_rows($comments);
@@ -134,122 +130,9 @@ if($page == 2 & $row['hide_yeahs'] == 1 & $_GET['ciiverseid'] != $_SESSION['ciiv
         ?>
       </div>
 			<div id="main-body">
-				<div id="sidebar" class="user-sidebar">
-					<div class="sidebar-container"> <?php
-            $stmt = $db->prepare("SELECT post_id, screenshot, owner FROM posts WHERE post_id = ? AND deleted = 0");
-            $stmt->bind_param('i', $row['favorite_post']);
-            $stmt->execute();
-            $result = $stmt->get_result();
-            $fav_post = $result->fetch_assoc();
 
-            if(!empty($fav_post['screenshot'])) { 
-              echo '<a href="/post/'.$fav_post['post_id'].'" id="sidebar-cover" style="background-image:url('.htmlspecialchars($fav_post['screenshot']).')"><img src="'.htmlspecialchars($fav_post['screenshot']).'" class="sidebar-cover-image"></a><div id="sidebar-profile-body" class="with-profile-post-image">';
-            } else {
-              echo '<div id="sidebar-profile-body" class="without-profile-post-image">';
-            }
-          ?>
-          <div class="icon-container <?php echo print_badge($userid); ?>">
-          <a href="/users/<?php echo $userid; ?>">
-          <img src="<?php echo $pfp; ?>" class="icon">
-        </a>
-      </div>
-      <?php 
-        if($row['user_type'] > 1) {
-          printOrganization($row['user_type'],0);
-        }
-      ?>
-      <a href="/users/<?=$_GET['ciiverseid']?>" class="nick-name"><?=$row['nickname']?></a>
-      <p class="id-name"><?php echo $userid; ?></p>
-      <?php if($row['user_level'] > 0) {echo '<p class="admin-level">Level '.$row['user_level'].' Admin</p>';} ?>
-      </div>
-       <?php if(isset($_SESSION['ciiverseid']) && $_SESSION['ciiverseid'] == $userid) { echo '<div id="edit-profile-settings"><a class="button symbol" href="/edit/profile">Edit Profile</a></div>'; }
-        if(isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == 'true') {
-        if($userid !== $_SESSION['ciiverseid']) {
-
-          if($following_user == 0) {
-            echo '<button type="button" data-user-id="'.$_GET['ciiverseid'].'" class="follow-button button symbol">Follow</button>';
-          } else {
-            echo '<button type="button" data-user-id="'.$_GET['ciiverseid'].'" class="unfollow-button button symbol">Follow</button>';
-          }
-
-        }
-
-        if($userid !== $_SESSION['ciiverseid']) {
-        if($row['user_level'] < $user['user_level'])
-          echo '<div id="edit-profile-settings"><a class="button symbol" href="/users/manage_user.php?cvid='.$_GET['ciiverseid'].'">Manage Account</a></div>';
-        }
-       } ?>
-      <ul id="sidebar-profile-status">
-      <li><a href="/users/<?=$_GET['ciiverseid']?>/following"><span><span class="number"><?php echo $following_count; ?></span>Following</span></a></li>
-      <li><a href="/users/<?=$_GET['ciiverseid']?>/followers"><span><span class="number"><?php echo $follower_count; ?></span>Followers</span></a></li>
-    </div> 
-    <div class="sidebar-setting sidebar-container">
-  <div class="sidebar-post-menu">
-    <a href="/users/<?php echo $userid; ?>" class="sidebar-menu-post with-count symbol <?php if($page == 1) {echo'selected';} ?>">
-      <span>All posts</span>
-      <span class="post-count">
-          <span class="test-post-count" id="js-my-post-count"><?php echo $post_count; ?></span>
-        </span>
-      </a>
-      <?php 
-      if($row['hide_replies'] == 0 || $userid == $_SESSION['ciiverseid']) { ?>
-    <a href="/users/<?php echo $userid; ?>/replies" class="sidebar-menu-post with-count symbol <?php if($page == 3) {echo'selected';} ?>">
-      <span>Replies</span>
-      <span class="post-count">
-          <span class="test-post-count" id="js-my-post-count"><?php echo $reply_count; ?></span>
-        </span>
-      </a> <?php
-    }
-      ?>
-      <?php if($row['hide_yeahs'] == 0 || $userid == $_SESSION['ciiverseid']) { ?>
-    <a class="sidebar-menu-empathies with-count symbol <?php if($page == 2) {echo'selected';} ?>" href="/users/<?php echo $userid; ?>/empathies">
-      <span>Yeahs</span>
-      <span class="post-count">
-        <span class="test-empathy-count"><?php echo $yeah_count; ?></span>
-      </span>
-    </a>
-  <?php } ?>
-    <?php
-    if($userid == $_SESSION['ciiverseid']) {
-    ?> <a class="sidebar-menu-post with-count symbol <?php if($page == 4) {echo'selected';} ?>" href="/users/<?php echo $userid; ?>/deleted">
-      <span>Deleted Posts</span>
-      <span class="post-count">
-        <span class="test-empathy-count"><?php echo $deleted_count; ?></span>
-      </span>
-    </a> <?php
-  }
-    ?>
-  </div>
-</div>
-
-                 <div class="sidebar-container sidebar-profile">
-       <?php 
-       if(!empty($row['prof_desc'])) {
-        echo '<div class="profile-comment">
-        <p class="js-truncated-text">' .htmlspecialchars($row['prof_desc']).'</p>
-              </div>';
-       }
-       ?>
-       <div class="user-data">
-        <div class="user-main-profile data-content">
-          <h4><span>NNID</span></h4>
-            <div class="note"><?php if(!empty($row['nnid'])){echo $row['nnid'];}else{echo 'Not set.';} ?></div>
-        </div>
-        <?php 
-
-        while($tags = mysqli_fetch_array($profile_tags)) {
-
-          echo '<div class="user-main-profile data-content">
-          <h4><span>'.$tags['tag_name'].'</span></h4>
-            <div class="note">'.$tags['tag_content'].'</div>
-        </div>';
-
-        } 
-
-        ?>
-      </div>
-    </div>
   <?php
+  userSidebar($userid, false, false, $page);
   if(mysqli_num_rows($favorites) !== 0) {
   echo '<div class="sidebar-container sidebar-favorite-community"><h4><a href="'.($_SESSION['ciiverseid'] == $userid ? '/communities/favorites' : '/users/'.$userid.'/favorites').'" class="symbol favorite-community-button"><span>Favorite Communities</span></a></h4>
 <ul class="test-favorite-communities">';
