@@ -57,8 +57,14 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
         if($count !== 1) {
 
 	    if(!isset($err)) {
-            $stmt = $db->prepare('INSERT INTO users (nickname, ciiverseid, password, user_type) VALUES (?, ?, ?, 1)');
-            $stmt->bind_param('sss', $nickname, $ciiverseid, $password_hash);
+            if(AUTO_IMAGE_PERMISSIONS) {
+                $imagePerms = 1;
+            } else {
+                $imagePerms = 0;
+            }
+
+            $stmt = $db->prepare('INSERT INTO users (nickname, ciiverseid, password, can_post_images, user_type) VALUES (?, ?, ?, ?, 1)');
+            $stmt->bind_param('sssi', $nickname, $ciiverseid, $password_hash, $imagePerms);
             $stmt->execute();
 
             $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';

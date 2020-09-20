@@ -40,7 +40,7 @@ formHeaders('Communities - Ciiverse');
     <div id="main-body">
       <div class="community-top-sidebar">
 <div class="post-list-outline index-memo">
-<h2 class="label"><?php echo $memo_title; ?></h2><p style="width: 90%; display: inine-block; padding: 10px;"><?php echo $memo_content; ?></p>
+<h2 class="label"><?=MEMO_TITLE?></h2><p style="width: 90%; display: inine-block; padding: 10px;"><?=MEMO_CONTENT?></p>
 </div>
 </div>
       <div class="body-content" id="community-top">

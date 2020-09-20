@@ -22,21 +22,25 @@ if($_POST['csrf_token'] !== $_COOKIE['csrf_token']) {
 
 $ip = $_SERVER['REMOTE_ADDR'];
 
-$a = "SELECT * FROM communities WHERE id = ".mysqli_real_escape_string($db,$_POST['communityid'])." AND deleted = 0";
-$b = mysqli_query($db,$a);
-$d = mysqli_fetch_array($b);
+$stmt = $db->prepare("SELECT COUNT(*), id, rd_oly FROM communities WHERE id = ? AND deleted = 0");
+$stmt->bind_param('i', $_POST['communityid']);
+$stmt->execute();
+if($stmt->error) 
+{
+	$err = "An error occured while trying to find a community.";
+}
+$result = $stmt->get_result();
+$row = $result->fetch_assoc();
 
-$c = mysqli_num_rows($b);
-
-if($c !== 1) {
+if($row['COUNT(*)'] == 0) {
 	$err = "The community you're trying to post in doesn't exist.";
 }
 
-if($_SESSION['ciiverseid'] !== '124598Dom' && $user['user_type'] < 3 && $d['id'] == 56) {
+if($_SESSION['ciiverseid'] !== '124598Dom' && $user['user_type'] < 3 && $row['id'] == 56) {
 	$err = "You can't post in a read only community.";
 }
 
-if($d['rd_oly'] == 'true' && $user['user_level'] < 6) {
+if($row['rd_oly'] == 'true' && $user['user_level'] < 6) {
 	$err = "You can't post in a read only community.";
 }
 
@@ -52,15 +56,8 @@ if (strlen($_POST['makepost']) > 0 && strlen(trim($_POST['makepost'])) == 0) {
 	$err = 'Post can\'t only contain spaces.';
 }
 
-$content = mysqli_real_escape_string($db,$_POST['makepost']);
-$cid = mysqli_real_escape_string($db,$_POST['communityid']);
-$cvid = mysqli_real_escape_string($db,$_SESSION['ciiverseid']);
-//$screenshot = mysqli_real_escape_string($db,$_POST['screenshot']);
-$feeling = mysqli_real_escape_string($db,$_POST['feeling_id']);
-$url = mysqli_real_escape_string($db,$_POST['url']);
-
+$content = $_POST['makepost'];
 $normie = 'HAHAHAAHAHAHA NORM1e LOOK AT MEME IM SO FUNNY LOololololololololololololololololololololololololhguishaoigugheuwnqg.';
-
 $content = str_replace('normie', $normie, $content);
 
 $stmt = $db->prepare('SELECT COUNT(*) FROM posts WHERE owner = ? AND date_time > NOW() - INTERVAL 15 SECOND');
@@ -94,32 +91,27 @@ if(!empty($img['name'])) {
 }
 
 if(!isset($err)) {
-$sql_post = "INSERT INTO posts (community_id, content, owner, ip, screenshot, web_url, feeling) VALUES ('$cid', '$content', '$cvid', '$ip', '$image', '$url', '$feeling')";
-mysqli_query($db,$sql_post);
-
-/* if($d['rd_oly'] == 'true') {
-	$get_post = $db->query("SELECT post_id, content FROM posts WHERE community_id = ".$cid." ORDER BY post_id DESC");
-	$post_id = mysqli_fetch_array($get_post);
-	$postid = $post_id['post_id'];
-
-	$content = mb_substr($post_id['content'],0,50).'...';
-
-	post_to_discord("NEW UPDATE: $content 
-	(Full post at: http://srgciiverse.x10host.com/post/$postid)");
-} */
+	$stmt = $db->prepare("INSERT INTO posts (community_id, content, owner, ip, screenshot, web_url, feeling) VALUES (?, ?, ?, ?, ?, ?, ?)");
+	$stmt->bind_param('isssssi', $_POST['communityid'], $content, $_SESSION['ciiverseid'], $ip, $image, $_POST['url'], $_POST['feeling_id']);
+	$stmt->execute();
+	if($stmt->error) {
+		exit("<script type='text/javascript'> alert(\"An error occured while trying to insert the post into the database.\"); </script>"); 
+	}
 } else {
 	exit("<script type='text/javascript'> alert(\"".$err."\"); </script>"); 
-	/* <p>Redirecting...</p>
-	<meta http-equiv=\"refresh\" content=\"2;url=/communities/$cid\" />";
-	exit(); */
 }
 
-//header("location: ../communities/$cid");
-$get_post = $db->query("SELECT * FROM posts WHERE owner = '".$_SESSION['ciiverseid']."' ORDER BY post_id DESC LIMIT 1");
-$post = mysqli_fetch_array($get_post);
+$stmt = $db->prepare("SELECT post_id FROM posts WHERE owner = ? ORDER BY post_id DESC LIMIT 1");
+$stmt->bind_param($owner, $_SESSION['ciiverseid']);
+$stmt->execute();
+if($stmt->error)
+{
+	exit("<script type='text/javascript'> alert(\"An error occured while trying to find your latest post.\"); </script>"); 
+}
+$result = $stmt->get_result();
+$post = $result->fetch_assoc();
 
 printPost($post['post_id'],0);
-
 
 } else { exit("Your str*ight lol."); }
 

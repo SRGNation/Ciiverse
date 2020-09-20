@@ -1,26 +1,5 @@
 <?php
-   //Standard database login stuff. Required.
-   const DB_SERVER = 'localhost';
-   const DB_USERNAME = 'root';
-   const DB_PASSWORD = '';
-   const DB_DATABASE = 'ciiverse';
-
-   //This is for image uploading. If you leave this empty, it will just use Reverb's account to upload images. Optional.
-   const CLOUDINARY_NAME = null;
-   const CLOUDINARY_KEY = null;
-   const CLOUDINARY_PRESET = null;
-
-   //This is for if you want your instance to have ReCAPTCHA support. Optional, but highly reccomended.
-   const RECAPTCHA_KEY = null;
-   const RECAPTCHA_SECRET = null;
-
-   //This is for Discord Webhook support. There is a function called post_to_discord() that I never used for Ciiverse, so uhh... Why not? Optional.
-   const DISCORD_WEBHOOK = null;
-
-   //This is basically the about page for Ciiverse.
-   $memo_title = "What is Ciiverse?";
-   $memo_content = "Ciiverse is an open source Miiverse clone created by SRGNation. I wouldn't reccomend using it for your 431243125th Miiverse clone rehost, because it is still extremely unsecure. However, this version adds a few more features and fixes up a few things to make it less confusing. Kind of inspired by PF2M releasing a slightly fixed up version of Openverse, and also for Ciiverse's 3rd anniversary of existing...";
-
+   require_once('config.php');
    error_reporting(E_ALL);
 
    function showError($err) 
@@ -108,7 +87,7 @@
       }
    }
 
-   date_default_timezone_set('America/Phoenix');
+   date_default_timezone_set($db->real_escape_string(TIMEZONE));
 
    /*
    include('lib/users.php');
