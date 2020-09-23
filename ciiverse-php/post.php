@@ -102,7 +102,7 @@ if(!isset($err)) {
 }
 
 $stmt = $db->prepare("SELECT post_id FROM posts WHERE owner = ? ORDER BY post_id DESC LIMIT 1");
-$stmt->bind_param($owner, $_SESSION['ciiverseid']);
+$stmt->bind_param('s', $_SESSION['ciiverseid']);
 $stmt->execute();
 if($stmt->error)
 {
